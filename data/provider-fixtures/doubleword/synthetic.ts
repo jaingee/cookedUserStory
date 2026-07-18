@@ -2,7 +2,7 @@ import type { ClaimExtraction } from "@/lib/providers/doubleword.server";
 
 // Deliberately synthetic: this is a deterministic demo fallback, not integration proof.
 export const syntheticDoublewordFixture: ClaimExtraction = {
-  productId: "laptop-one",
+  productId: "laptop-asus-zenbook-ux3405ma",
   claims: [
     {
       criterionKey: "ram_gb",

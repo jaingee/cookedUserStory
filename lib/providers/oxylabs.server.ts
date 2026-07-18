@@ -3,7 +3,7 @@ import "server-only";
 import { fetch as undiciFetch, ProxyAgent } from "undici";
 
 import { providerResultSchema } from "@/lib/contracts";
-import syntheticFixtureJson from "@/data/provider-fixtures/oxylabs/laptop-asus-zenbook-ux3405.json";
+import syntheticFixtureJson from "@/data/provider-fixtures/oxylabs/laptop-asus-zenbook-ux3405ma.json";
 import {
   ASUS_ZENBOOK_PRODUCT_ID,
   MAX_RESPONSE_BYTES,

@@ -25,9 +25,13 @@ async function decodeResponse<TResponse>(response: Response, decode: Decoder<TRe
   }
 
   if (!response.ok) {
-    const message =
-      typeof payload === "object" && payload !== null && "error" in payload && typeof payload.error === "string"
-        ? payload.error
+    const candidate = typeof payload === "object" && payload !== null && "error" in payload
+      ? (payload as { error?: unknown }).error
+      : null;
+    const message = typeof candidate === "string"
+      ? candidate
+      : candidate && typeof candidate === "object" && "code" in candidate && typeof (candidate as { code?: unknown }).code === "string"
+        ? `The service could not complete the request (${(candidate as { code: string }).code}).`
         : `The service could not complete the request (${response.status}).`;
     throw new ClientApiError(message, response.status);
   }

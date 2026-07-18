@@ -17,7 +17,7 @@ describe("POST /api/retrieve", () => {
   it("returns 422 when an arbitrary URL is supplied", async () => {
     const response = await POST(
       new Request("http://localhost/api/retrieve", {
-        body: JSON.stringify({ productId: "laptop-asus-zenbook-ux3405", url: "https://evil.example" }),
+        body: JSON.stringify({ productId: "laptop-asus-zenbook-ux3405ma", url: "https://evil.example" }),
         headers: { "content-type": "application/json" },
         method: "POST",
       }),

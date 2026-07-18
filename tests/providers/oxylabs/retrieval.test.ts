@@ -23,7 +23,7 @@ function configuredEnv(): void {
 
 describe("Oxylabs retrieval", () => {
   it("resolves the known product to the immutable HTTPS allowlist", () => {
-    const target = OXYLABS_TARGETS["laptop-asus-zenbook-ux3405"];
+    const target = OXYLABS_TARGETS["laptop-asus-zenbook-ux3405ma"];
 
     expect(target).toBe(
       "https://www.asus.com/sg/laptops/for-home/zenbook/asus-zenbook-14-oled-ux3405/techspec/",
@@ -128,7 +128,7 @@ describe("Oxylabs retrieval", () => {
     vi.stubEnv("DEMO_PROVIDER_MODE", "cache-only");
     const fetchFn = vi.fn(async () => new Response("should not fetch", { status: 200 }));
 
-    const result = await retrieveOxylabsProduct("laptop-asus-zenbook-ux3405", { fetchFn });
+    const result = await retrieveOxylabsProduct("laptop-asus-zenbook-ux3405ma", { fetchFn });
 
     expect(result.status).toBe("fallback");
     expect(result.origin).toBe("synthetic_fixture");

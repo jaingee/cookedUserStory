@@ -71,7 +71,8 @@ describe("Oxylabs retrieval", () => {
 
     expect(result.status).toBe("fallback");
     expect(result.origin).toBe("synthetic_fixture");
-    expect(result.warning).toBe("Synthetic retrieval fixture used; no valid live Oxylabs artifact was captured.");
+    expect(result.errorCode).toBe("unsafe_url");
+    expect(result.warning).toMatch(/Synthetic retrieval fixture used; live Oxylabs attempt failed:/);
     expect(JSON.stringify(result)).not.toContain("test-password");
     expect(JSON.stringify(result)).not.toContain("proxy.example");
   });
@@ -84,6 +85,7 @@ describe("Oxylabs retrieval", () => {
 
     expect(result.status).toBe("fallback");
     expect(result.origin).toBe("synthetic_fixture");
+    expect(result.errorCode).toBe("upstream_error");
   });
 
   it("rejects unknown product IDs before transport use", async () => {
@@ -107,7 +109,8 @@ describe("Oxylabs retrieval", () => {
 
     expect(result.status).toBe("fallback");
     expect(result.origin).toBe("synthetic_fixture");
-    expect(result.warning).toBe("Synthetic retrieval fixture used; no valid live Oxylabs artifact was captured.");
+    expect(result.errorCode).toBe("timeout");
+    expect(result.warning).toMatch(/Synthetic retrieval fixture used; live Oxylabs attempt failed:/);
   });
 
   it("uses the cache without transport in cache-only mode", async () => {

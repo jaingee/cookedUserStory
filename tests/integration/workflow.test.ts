@@ -7,6 +7,7 @@ import { scoringResultSchema } from "@/lib/contracts";
 import { POST as scorePost } from "@/app/api/score/route";
 import { ASUS_ZENBOOK_PRODUCT_ID } from "@/lib/retrieval/oxylabs";
 import { syntheticDoublewordFixture } from "@/data/provider-fixtures/doubleword/synthetic";
+import { buildStandaloneScorerSource } from "@/lib/scoring/score-products";
 
 const payloadFor = (category: "laptop" | "air_purifier" | "lab_oven") => {
   const requirements = categoryConfigById[category].defaultRequirements;
@@ -61,5 +62,12 @@ describe("integrated scoring route", () => {
   it("keeps the ASUS product ID aligned across retrieval and extraction fixtures", () => {
     expect(ASUS_ZENBOOK_PRODUCT_ID).toBe("laptop-asus-zenbook-ux3405ma");
     expect(syntheticDoublewordFixture.productId).toBe(ASUS_ZENBOOK_PRODUCT_ID);
+  });
+
+  it("builds Daytona source with the scorer's module helper included", () => {
+    const source = buildStandaloneScorerSource();
+    expect(source).toContain("function asciiCompare");
+    expect(source).toContain("function scoreProducts");
+    expect(source).not.toMatch(/\bimport\b|\brequire\s*\(|\bprocess\.env\b|\bfetch\s*\(/i);
   });
 });

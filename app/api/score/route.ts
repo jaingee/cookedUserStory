@@ -9,7 +9,7 @@ import {
   type ScoringInput,
 } from "@/lib/contracts";
 import { loadProductsForCategory } from "@/lib/domain/products";
-import { scoreProducts } from "@/lib/scoring/score-products";
+import { buildStandaloneScorerSource, scoreProducts } from "@/lib/scoring/score-products";
 import { verifyScoringWithDaytona } from "@/lib/providers/daytona.server";
 
 const requestSchema = z.object({
@@ -39,7 +39,7 @@ export async function POST(request: Request): Promise<Response> {
       preferredWeights: parsed.data.preferredWeights,
     });
     const result = scoringResultSchema.parse(scoreProducts(scoringInput));
-    const scorerSource = scoreProducts.toString();
+    const scorerSource = buildStandaloneScorerSource();
     const sourceUsable = /\bscoreProducts\b/.test(scorerSource)
       && !/\bimport\b|\brequire\s*\(|\bprocess\.env\b|\bfetch\s*\(/i.test(scorerSource);
     const verification = await verifyScoringWithDaytona({

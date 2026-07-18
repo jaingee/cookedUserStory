@@ -123,7 +123,7 @@ function getSyntheticFixture(): RetrievalArtifact | null {
   return validateSyntheticFixture(syntheticFixtureJson);
 }
 
-function syntheticFallbackResult(): OxylabsProviderResult | null {
+function syntheticFallbackResult(errorCode?: ProviderErrorCode, liveWarning?: string): OxylabsProviderResult | null {
   const data = getSyntheticFixture();
   if (!data) {
     return null;
@@ -134,7 +134,10 @@ function syntheticFallbackResult(): OxylabsProviderResult | null {
     status: "fallback",
     origin: "synthetic_fixture",
     data,
-    warning: "Synthetic retrieval fixture used; no valid live Oxylabs artifact was captured.",
+    warning: liveWarning
+      ? `Synthetic retrieval fixture used; live Oxylabs attempt failed: ${liveWarning}`
+      : "Synthetic retrieval fixture used; no valid live Oxylabs artifact was captured.",
+    ...(errorCode ? { errorCode } : {}),
   });
 }
 
@@ -316,6 +319,6 @@ export async function retrieveOxylabsProduct(
     });
   } catch (error) {
     const failure = getFailure(error);
-    return syntheticFallbackResult() ?? failureResult(failure);
+    return syntheticFallbackResult(failure.code, failure.publicWarning) ?? failureResult(failure);
   }
 }

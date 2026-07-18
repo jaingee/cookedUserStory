@@ -122,6 +122,15 @@ function extractUpstreamPayload(body: unknown): unknown {
     if (typeof content === "string") {
       try { return JSON.parse(content); } catch { return null; }
     }
+    if (Array.isArray(content)) {
+      const text = content
+        .map((part) => typeof part === "string" ? part : part && typeof part === "object" && typeof (part as Record<string, unknown>).text === "string" ? (part as Record<string, unknown>).text : "")
+        .join("")
+        .trim();
+      if (text) {
+        try { return JSON.parse(text); } catch { return null; }
+      }
+    }
   }
   const output = record.output ?? record.data ?? record.result;
   if (typeof output === "string") {

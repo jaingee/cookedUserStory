@@ -401,3 +401,7 @@ export function scoreProducts(input: ScoringInput): ScoringResult {
     warnings,
   };
 }
+
+export function buildStandaloneScorerSource(): string {
+  return `${asciiCompare.toString()}\n${scoreProducts.toString()}`;
+}

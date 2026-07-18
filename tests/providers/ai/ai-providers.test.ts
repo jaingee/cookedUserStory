@@ -45,6 +45,13 @@ describe("AI& provider", () => {
     expect(body.messages[1].content).toContain("categoryHint");
   });
 
+  it("accepts the documented OpenAI-compatible text-part content shape", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({ choices: [{ message: { content: [{ type: "text", text: JSON.stringify(validAiData) }] } }] }), { status: 200 }));
+    const result = await extractRequirements("I need a laptop for development and travel.", undefined, { fetchImpl: fetchMock });
+    expect(result.status).toBe("live");
+    expect(result.data).toEqual(validAiData);
+  });
+
   it("normalizes trailing slashes on the AI& base URL", async () => {
     process.env.AIAND_BASE_URL = "https://aiand.test/v1///";
     const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({ output: validAiData }), { status: 200 }));
@@ -133,6 +140,13 @@ describe("Doubleword provider", () => {
     expect(body.messages).toHaveLength(2);
     expect(body.messages[0].role).toBe("system");
     expect(body.messages[1].content).toContain("retrievedText");
+  });
+
+  it("accepts the documented OpenAI-compatible text-part content shape", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({ choices: [{ message: { content: [{ type: "text", text: JSON.stringify(validClaims) }] } }] }), { status: 200 }));
+    const result = await extractClaims(validArtifact, { fetchImpl: fetchMock });
+    expect(result.status).toBe("live");
+    expect(result.data).toEqual(validClaims);
   });
 
   it("normalizes trailing slashes on the Doubleword base URL", async () => {

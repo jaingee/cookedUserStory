@@ -1,0 +1,19 @@
+{
+  "engineVersion": "1.0.0",
+  "inputDigest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "expectedResultDigest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "returnedResultDigest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "match": true,
+  "comparisons": {
+    "engineVersion": true,
+    "inputDigest": true,
+    "normalizedWeights": true,
+    "qualificationResults": true,
+    "criterionScores": true,
+    "weightedScores": true,
+    "ranks": true,
+    "recommendation": true
+  },
+  "capturedAt": "2026-07-18T07:00:00.000Z",
+  "durationMs": 0
+}

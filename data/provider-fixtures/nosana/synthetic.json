@@ -1,0 +1,12 @@
+{
+  "warnings": [
+    {
+      "productId": null,
+      "criterionKey": null,
+      "severity": "info",
+      "message": "Review the available source evidence before relying on an unknown value.",
+      "action": "review_source"
+    }
+  ],
+  "reviewedAt": "2026-07-18T07:00:00.000Z"
+}

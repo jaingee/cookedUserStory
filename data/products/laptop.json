@@ -6,16 +6,17 @@
     "model": "MacBook Air 13-inch M4",
     "displayName": "Apple MacBook Air 13-inch M4, 16 GB RAM / 512 GB storage",
     "productUrl": null,
-    "price": { "amount": null, "currency": "SGD" },
+    "price": { "amount": 1499, "currency": "SGD" },
     "specifications": {
-      "ram_gb": { "value": 16, "unit": "GB", "origin": "prepared_fixture", "claimStatus": "user_supplied", "confidence": "high", "evidenceIds": ["fixture-laptop-apple"] },
-      "storage_gb": { "value": 512, "unit": "GB", "origin": "prepared_fixture", "claimStatus": "user_supplied", "confidence": "high", "evidenceIds": ["fixture-laptop-apple"] },
-      "battery_life_h": { "value": null, "unit": "h", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "weight_kg": { "value": null, "unit": "kg", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "geekbench_6_multicore": { "value": null, "unit": "Geekbench 6 multicore points", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] }
+      "price_sgd": { "value": 1499, "unit": "SGD", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-laptop-apple"] },
+      "ram_gb": { "value": 16, "unit": "GB", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-laptop-apple"] },
+      "storage_gb": { "value": 512, "unit": "GB", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-laptop-apple"] },
+      "battery_life_h": { "value": 15, "unit": "h", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-laptop-apple"] },
+      "weight_kg": { "value": 1.24, "unit": "kg", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-laptop-apple"] },
+      "geekbench_6_multicore": { "value": 12000, "unit": "Geekbench 6 multicore points", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-laptop-apple"] }
     },
     "evidence": [
-      { "id": "fixture-laptop-apple", "sourceUrl": null, "sourceTitle": "Owner-approved fixture brief", "retrievedAt": "2026-07-18T00:00:00.000Z", "excerpt": "Brief names the Apple MacBook Air with 16 GB RAM and 512 GB storage.", "origin": "prepared_fixture", "claimStatus": "user_supplied" }
+      { "id": "synthetic-laptop-apple", "sourceUrl": null, "sourceTitle": "Synthetic hackathon demo fixture", "retrievedAt": "2026-07-18T00:00:00.000Z", "excerpt": "Synthetic hackathon demo fixture. Values are demo-only and are not a verified real-world product claim.", "origin": "synthetic_fixture", "claimStatus": "user_supplied" }
     ]
   },
   {
@@ -25,16 +26,17 @@
     "model": "Zenbook 14 OLED UX3405MA",
     "displayName": "ASUS Zenbook 14 OLED UX3405MA, Core Ultra 7 / 16 GB / 1 TB",
     "productUrl": null,
-    "price": { "amount": null, "currency": "SGD" },
+    "price": { "amount": 1699, "currency": "SGD" },
     "specifications": {
-      "ram_gb": { "value": 16, "unit": "GB", "origin": "prepared_fixture", "claimStatus": "user_supplied", "confidence": "high", "evidenceIds": ["fixture-laptop-asus"] },
-      "storage_gb": { "value": 1024, "unit": "GB", "origin": "prepared_fixture", "claimStatus": "user_supplied", "confidence": "high", "evidenceIds": ["fixture-laptop-asus"] },
-      "battery_life_h": { "value": null, "unit": "h", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "weight_kg": { "value": null, "unit": "kg", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "geekbench_6_multicore": { "value": null, "unit": "Geekbench 6 multicore points", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] }
+      "price_sgd": { "value": 1699, "unit": "SGD", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-laptop-asus"] },
+      "ram_gb": { "value": 16, "unit": "GB", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-laptop-asus"] },
+      "storage_gb": { "value": 1024, "unit": "GB", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-laptop-asus"] },
+      "battery_life_h": { "value": 18, "unit": "h", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-laptop-asus"] },
+      "weight_kg": { "value": 1.28, "unit": "kg", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-laptop-asus"] },
+      "geekbench_6_multicore": { "value": 13500, "unit": "Geekbench 6 multicore points", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-laptop-asus"] }
     },
     "evidence": [
-      { "id": "fixture-laptop-asus", "sourceUrl": null, "sourceTitle": "Owner-approved fixture brief", "retrievedAt": "2026-07-18T00:00:00.000Z", "excerpt": "Brief names the ASUS Zenbook with Core Ultra 7, 16 GB RAM, and 1 TB storage.", "origin": "prepared_fixture", "claimStatus": "user_supplied" }
+      { "id": "synthetic-laptop-asus", "sourceUrl": null, "sourceTitle": "Synthetic hackathon demo fixture", "retrievedAt": "2026-07-18T00:00:00.000Z", "excerpt": "Synthetic hackathon demo fixture. Values are demo-only and are not a verified real-world product claim.", "origin": "synthetic_fixture", "claimStatus": "user_supplied" }
     ]
   },
   {
@@ -44,16 +46,17 @@
     "model": "Yoga Slim 7 14IMH9",
     "displayName": "Lenovo Yoga Slim 7 14IMH9, Core Ultra 7 / 32 GB / 1 TB",
     "productUrl": null,
-    "price": { "amount": null, "currency": "SGD" },
+    "price": { "amount": 1899, "currency": "SGD" },
     "specifications": {
-      "ram_gb": { "value": 32, "unit": "GB", "origin": "prepared_fixture", "claimStatus": "user_supplied", "confidence": "high", "evidenceIds": ["fixture-laptop-lenovo"] },
-      "storage_gb": { "value": 1024, "unit": "GB", "origin": "prepared_fixture", "claimStatus": "user_supplied", "confidence": "high", "evidenceIds": ["fixture-laptop-lenovo"] },
-      "battery_life_h": { "value": null, "unit": "h", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "weight_kg": { "value": null, "unit": "kg", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "geekbench_6_multicore": { "value": null, "unit": "Geekbench 6 multicore points", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] }
+      "price_sgd": { "value": 1899, "unit": "SGD", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-laptop-lenovo"] },
+      "ram_gb": { "value": 32, "unit": "GB", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-laptop-lenovo"] },
+      "storage_gb": { "value": 1024, "unit": "GB", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-laptop-lenovo"] },
+      "battery_life_h": { "value": 16, "unit": "h", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-laptop-lenovo"] },
+      "weight_kg": { "value": 1.35, "unit": "kg", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-laptop-lenovo"] },
+      "geekbench_6_multicore": { "value": 14000, "unit": "Geekbench 6 multicore points", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-laptop-lenovo"] }
     },
     "evidence": [
-      { "id": "fixture-laptop-lenovo", "sourceUrl": null, "sourceTitle": "Owner-approved fixture brief", "retrievedAt": "2026-07-18T00:00:00.000Z", "excerpt": "Brief names the Lenovo Yoga Slim with Core Ultra 7, 32 GB RAM, and 1 TB storage.", "origin": "prepared_fixture", "claimStatus": "user_supplied" }
+      { "id": "synthetic-laptop-lenovo", "sourceUrl": null, "sourceTitle": "Synthetic hackathon demo fixture", "retrievedAt": "2026-07-18T00:00:00.000Z", "excerpt": "Synthetic hackathon demo fixture. Values are demo-only and are not a verified real-world product claim.", "origin": "synthetic_fixture", "claimStatus": "user_supplied" }
     ]
   }
 ]

@@ -155,6 +155,77 @@ describe("product fixtures and domain helpers", () => {
     expect(resolveEvidenceReference(fixture, evidence.id)).toEqual(evidence);
     expect(calculateEvidenceCompleteness(fixture)).toBe(1);
   });
+
+  it("provides an honest deterministic recommendation for every synthetic demo category", () => {
+    const expectedRecommendations = {
+      laptop: "laptop-apple-macbook-air-m4",
+      air_purifier: "air-purifier-philips-pureprotect-3200-ac3220-10",
+      lab_oven: "lab-oven-memmert-un55",
+    } as const;
+
+    for (const config of categoryConfigs) {
+      const products = loadProductsForCategory(config.category);
+      const scoringInput: ScoringInput = {
+        version: "1.0.0",
+        category: config.category,
+        requirements: config.defaultRequirements,
+        products,
+        preferredWeights: Object.fromEntries(
+          config.criteria
+            .filter((criterion) => criterion.supportedRequirementKinds.includes("preferred"))
+            .map((criterion) => [criterion.key, criterion.defaultWeight]),
+        ),
+      };
+      const first = scoreProducts(scoringInput);
+      const second = scoreProducts(JSON.parse(JSON.stringify(scoringInput)) as ScoringInput);
+      const qualified = first.rankedProducts.filter(({ qualification }) => qualification === "qualified");
+      const nonQualified = first.rankedProducts.filter(({ qualification }) => qualification !== "qualified");
+
+      expect(products).toHaveLength(3);
+      expect(qualified).toHaveLength(2);
+      expect(nonQualified).toHaveLength(1);
+      expect(nonQualified[0]?.qualification).toBe("disqualified");
+      expect(first.recommendedProductId).toBe(expectedRecommendations[config.category]);
+      expect(first.recommendedProductId).toBe(first.rankedProducts.find(({ rank }) => rank === 1)?.productId);
+      expect(JSON.stringify(first)).toBe(JSON.stringify(second));
+      expect(nonQualified.every(({ rank, productId }) => rank === null && productId !== first.recommendedProductId)).toBe(true);
+
+      for (const productRecord of products) {
+        expect(productRecord.price.amount).toBeGreaterThan(0);
+        expect(productRecord.price.currency).toBe("SGD");
+        for (const specification of Object.values(productRecord.specifications)) {
+          if (specification.value === null) continue;
+          expect(specification.origin).toBe("synthetic_fixture");
+          expect(specification.claimStatus).toBe("user_supplied");
+          expect(specification.confidence).toBe("low");
+          expect(specification.evidenceIds.length).toBeGreaterThan(0);
+          for (const evidenceId of specification.evidenceIds) {
+            const record = resolveEvidenceReference(productRecord, evidenceId);
+            expect(record?.sourceTitle).toContain("Synthetic hackathon demo fixture");
+            expect(record?.excerpt).toMatch(/demo-only/i);
+            expect(record?.excerpt).toMatch(/not a verified real-world product claim/i);
+          }
+        }
+      }
+    }
+  });
+
+  it("supports a weight-driven recommendation change in the air-purifier demo", () => {
+    const config = categoryConfigs.find(({ category }) => category === "air_purifier")!;
+    const products = loadProductsForCategory(config.category);
+    const baseInput: ScoringInput = {
+      version: "1.0.0",
+      category: config.category,
+      requirements: config.defaultRequirements,
+      products,
+      preferredWeights: Object.fromEntries(config.criteria.map((criterion) => [criterion.key, criterion.defaultWeight])),
+    };
+
+    const defaultResult = scoreProducts(baseInput);
+    const priceFocusedResult = scoreProducts({ ...baseInput, preferredWeights: { price_sgd: 100 } });
+
+    expect(defaultResult.recommendedProductId).not.toBe(priceFocusedResult.recommendedProductId);
+  });
 });
 
 describe("scoreProducts", () => {

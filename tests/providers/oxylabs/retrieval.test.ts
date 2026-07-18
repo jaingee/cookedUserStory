@@ -80,12 +80,24 @@ describe("Oxylabs retrieval", () => {
   it("rejects a response body over the 256 KB limit", async () => {
     configuredEnv();
     const result = await retrieveOxylabsProduct(ASUS_ZENBOOK_PRODUCT_ID, {
-      fetchFn: async () => new Response("x".repeat(256 * 1024 + 1), { status: 200 }),
+      fetchFn: async () => new Response(`<script>${"x".repeat(100)}</script>${" ".repeat(256 * 1024 + 1)}`, { status: 200 }),
     });
 
     expect(result.status).toBe("fallback");
     expect(result.origin).toBe("synthetic_fixture");
-    expect(result.errorCode).toBe("upstream_error");
+    expect(result.errorCode).toBe("invalid_response");
+  });
+
+  it("returns a bounded live excerpt when usable text appears before the limit", async () => {
+    configuredEnv();
+    const result = await retrieveOxylabsProduct(ASUS_ZENBOOK_PRODUCT_ID, {
+      fetchFn: async () => new Response(`<p>Zenbook bounded excerpt</p>${" ".repeat(256 * 1024 + 1)}`, { status: 200 }),
+    });
+
+    expect(result.status).toBe("live");
+    expect(result.origin).toBe("live_provider");
+    expect(result.data?.excerpt).toBe("Zenbook bounded excerpt");
+    expect(result.warning).toMatch(/truncated at 262144 bytes/);
   });
 
   it("rejects unknown product IDs before transport use", async () => {

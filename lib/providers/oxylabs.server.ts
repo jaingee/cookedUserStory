@@ -145,35 +145,43 @@ function failureResult(failure: RetrievalFailure): OxylabsProviderResult {
   return unavailableResult(failure.code, failure.publicWarning);
 }
 
-async function readResponseBody(response: Response): Promise<string> {
+type BoundedBody = { text: string; truncated: boolean };
+
+async function readResponseBody(response: Response): Promise<BoundedBody> {
   if (!response.body) {
     const text = await response.text();
-    if (new TextEncoder().encode(text).byteLength > MAX_RESPONSE_BYTES) {
-      throw new RetrievalFailure("upstream_error", "Provider response exceeded the safe size limit.");
-    }
-    return text;
+    const bytes = new TextEncoder().encode(text);
+    return {
+      text: new TextDecoder().decode(bytes.slice(0, MAX_RESPONSE_BYTES)),
+      truncated: bytes.byteLength > MAX_RESPONSE_BYTES,
+    };
   }
 
   const reader = response.body.getReader();
   const chunks: Uint8Array[] = [];
   let totalBytes = 0;
+  let truncated = false;
 
   try {
     while (true) {
       const next = await reader.read();
       if (next.done) break;
-      totalBytes += next.value.byteLength;
-      if (totalBytes > MAX_RESPONSE_BYTES) {
+      const remaining = MAX_RESPONSE_BYTES - totalBytes;
+      if (next.value.byteLength > remaining) {
+        if (remaining > 0) chunks.push(next.value.slice(0, remaining));
+        totalBytes = MAX_RESPONSE_BYTES;
+        truncated = true;
         await reader.cancel();
-        throw new RetrievalFailure("upstream_error", "Provider response exceeded the safe size limit.");
+        break;
       }
       chunks.push(next.value);
+      totalBytes += next.value.byteLength;
     }
   } finally {
     reader.releaseLock();
   }
 
-  return new TextDecoder().decode(Buffer.concat(chunks));
+  return { text: new TextDecoder().decode(Buffer.concat(chunks)), truncated };
 }
 
 function getFailure(error: unknown): RetrievalFailure {
@@ -219,7 +227,7 @@ async function retrieveLive(
   sourceUrl: string,
   fetchFn: FetchLike,
   now: () => Date,
-): Promise<RetrievalArtifact> {
+): Promise<{ artifact: RetrievalArtifact; truncated: boolean }> {
   let currentUrl = sourceUrl;
   let response: Response | undefined;
   const proxyUsername = config.username.toLowerCase().includes("-cc-")
@@ -261,19 +269,23 @@ async function retrieveLive(
       throw new RetrievalFailure("upstream_error", "Provider returned an unusable response.");
     }
 
-    const excerpt = extractPlainTextExcerpt(await readResponseBody(response));
+    const bounded = await readResponseBody(response);
+    const excerpt = extractPlainTextExcerpt(bounded.text);
     if (!excerpt) {
       throw new RetrievalFailure("invalid_response", "Provider returned no usable text.");
     }
 
-    return makeRetrievalArtifact({
-      productId: ASUS_ZENBOOK_PRODUCT_ID,
-      sourceUrl,
-      finalUrl: currentUrl,
-      httpStatus: response.status,
-      retrievedAt: now().toISOString(),
-      excerpt,
-    });
+    return {
+      artifact: makeRetrievalArtifact({
+        productId: ASUS_ZENBOOK_PRODUCT_ID,
+        sourceUrl,
+        finalUrl: currentUrl,
+        httpStatus: response.status,
+        retrievedAt: now().toISOString(),
+        excerpt,
+      }),
+      truncated: bounded.truncated,
+    };
   } finally {
     await dispatcher.close();
   }
@@ -304,7 +316,7 @@ export async function retrieveOxylabsProduct(
 
   const startedAt = Date.now();
   try {
-    const data = await retrieveLive(
+    const live = await retrieveLive(
       config,
       sourceUrl,
       options.fetchFn ?? (undiciFetch as unknown as FetchLike),
@@ -314,8 +326,9 @@ export async function retrieveOxylabsProduct(
       provider: "oxylabs",
       status: "live",
       origin: "live_provider",
-      data,
+      data: live.artifact,
       durationMs: Date.now() - startedAt,
+      ...(live.truncated ? { warning: `Live Oxylabs content was truncated at ${MAX_RESPONSE_BYTES} bytes; only the bounded excerpt was processed.` } : {}),
     });
   } catch (error) {
     const failure = getFailure(error);

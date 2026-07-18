@@ -250,7 +250,7 @@ function allComparisonsMatch(comparisons: DaytonaProof["comparisons"]): boolean 
 
 function localFallback(
   request: DaytonaVerificationRequest,
-  errorCode: "not_configured" | "timeout" | "network_error" | "invalid_response" | "output_mismatch" | "unavailable",
+  errorCode: "not_configured" | "timeout" | "network_error" | "upstream_error" | "invalid_response" | "output_mismatch" | "unavailable" | "unsafe_url",
   warning: string,
   durationMs: number,
   now: Date,
@@ -309,6 +309,36 @@ function makeClient(env: Record<string, string | undefined>): DaytonaClient {
   }) as unknown as DaytonaClient;
 }
 
+function cleanApiUrl(value: string | undefined): string | undefined | null {
+  const raw = value?.trim();
+  if (!raw) return undefined;
+  try {
+    const url = new URL(raw);
+    if (url.protocol !== "https:" || url.username || url.password || url.search || url.hash) return null;
+    url.pathname = url.pathname.replace(/\/+$/, "") || "/";
+    return url.toString();
+  } catch {
+    return null;
+  }
+}
+
+function classifyDaytonaFailure(error: unknown): { errorCode: "network_error" | "upstream_error" | "invalid_response"; warning: string } {
+  const message = error instanceof Error ? error.message.toLowerCase() : "";
+  if (/401|403|unauthori[sz]ed|forbidden|api.?key|authentication/.test(message)) {
+    return { errorCode: "upstream_error", warning: "Daytona authentication failed; local calculation remains authoritative." };
+  }
+  if (/target/.test(message)) {
+    return { errorCode: "upstream_error", warning: "Daytona target configuration was rejected; local calculation remains authoritative." };
+  }
+  if (/code.?run|execution|process/.test(message)) {
+    return { errorCode: "network_error", warning: "Daytona sandbox code execution failed; local calculation remains authoritative." };
+  }
+  if (/sandbox|create/.test(message)) {
+    return { errorCode: "network_error", warning: "Daytona sandbox creation failed; local calculation remains authoritative." };
+  }
+  return { errorCode: "network_error", warning: "Daytona was unavailable; local calculation remains authoritative." };
+}
+
 export async function verifyScoringWithDaytona(
   request: unknown,
   options: DaytonaAdapterOptions = {},
@@ -331,13 +361,17 @@ export async function verifyScoringWithDaytona(
   if (["cache_only", "cache-only", "offline"].includes(demoMode)) {
     return localFallback(parsed, "not_configured", "Daytona verification was skipped; local calculation remains authoritative.", Date.now() - startedAt, now());
   }
-  if (!env.DAYTONA_API_KEY || !env.DAYTONA_API_URL) {
+  if (!env.DAYTONA_API_KEY) {
     return localFallback(parsed, "not_configured", "Daytona is not configured; local calculation remains authoritative.", Date.now() - startedAt, now());
+  }
+  const apiUrl = cleanApiUrl(env.DAYTONA_API_URL);
+  if (apiUrl === null) {
+    return localFallback(parsed, "unsafe_url", "Daytona API URL must be a clean HTTPS URL; local calculation remains authoritative.", Date.now() - startedAt, now());
   }
 
   let sandbox: DaytonaSandbox | undefined;
   try {
-    const client = options.client ?? makeClient(env);
+    const client = options.client ?? makeClient({ ...env, DAYTONA_API_URL: apiUrl });
     sandbox = await withTimeout(client.create({
       language: "typescript",
       ephemeral: true,
@@ -382,7 +416,10 @@ export async function verifyScoringWithDaytona(
     if (error instanceof DaytonaInvalidResponseError) {
       return localFallback(parsed, "invalid_response", "Daytona returned an invalid scoring result; local calculation remains authoritative.", Date.now() - startedAt, now());
     }
-    return localFallback(parsed, "network_error", "Daytona was unavailable; local calculation remains authoritative.", Date.now() - startedAt, now());
+    const failure = sandbox
+      ? { errorCode: "network_error" as const, warning: "Daytona sandbox code execution failed; local calculation remains authoritative." }
+      : classifyDaytonaFailure(error);
+    return localFallback(parsed, failure.errorCode, failure.warning, Date.now() - startedAt, now());
   } finally {
     if (sandbox) {
       try {

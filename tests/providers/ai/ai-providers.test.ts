@@ -43,10 +43,22 @@ describe("AI& provider", () => {
     expect(body.messages).toHaveLength(2);
     expect(body.messages[0].role).toBe("system");
     expect(body.messages[1].content).toContain("categoryHint");
+    expect(body.response_format.type).toBe("json_schema");
+    expect(body.response_format.json_schema.name).toBe("purchase_requirements");
+    expect(body.response_format.json_schema.strict).toBe(true);
+    expect(body.response_format.json_schema.schema.additionalProperties).toBe(false);
+    expect(body.response_format.json_schema.schema.properties.requirements.items.additionalProperties).toBe(false);
   });
 
   it("accepts the documented OpenAI-compatible text-part content shape", async () => {
     const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({ choices: [{ message: { content: [{ type: "text", text: JSON.stringify(validAiData) }] } }] }), { status: 200 }));
+    const result = await extractRequirements("I need a laptop for development and travel.", undefined, { fetchImpl: fetchMock });
+    expect(result.status).toBe("live");
+    expect(result.data).toEqual(validAiData);
+  });
+
+  it("accepts a structured message content object when the endpoint returns one", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({ choices: [{ message: { content: validAiData } }] }), { status: 200 }));
     const result = await extractRequirements("I need a laptop for development and travel.", undefined, { fetchImpl: fetchMock });
     expect(result.status).toBe("live");
     expect(result.data).toEqual(validAiData);
@@ -77,6 +89,7 @@ describe("AI& provider", () => {
     expect(result.origin).toBeNull();
     expect(result.data).toBeNull();
     expect(result.errorCode).toBe("invalid_response");
+    expect(result.warning).toMatch(/requirements\.0\.unit:invalid_value/);
   });
 
   it("uses an injected sanitized cache on timeout without retrying", async () => {
@@ -140,10 +153,21 @@ describe("Doubleword provider", () => {
     expect(body.messages).toHaveLength(2);
     expect(body.messages[0].role).toBe("system");
     expect(body.messages[1].content).toContain("retrievedText");
+    expect(body.response_format.type).toBe("json_schema");
+    expect(body.response_format.json_schema.name).toBe("product_claim_extraction");
+    expect(body.response_format.json_schema.strict).toBe(true);
+    expect(body.response_format.json_schema.schema.additionalProperties).toBe(false);
   });
 
   it("accepts the documented OpenAI-compatible text-part content shape", async () => {
     const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({ choices: [{ message: { content: [{ type: "text", text: JSON.stringify(validClaims) }] } }] }), { status: 200 }));
+    const result = await extractClaims(validArtifact, { fetchImpl: fetchMock });
+    expect(result.status).toBe("live");
+    expect(result.data).toEqual(validClaims);
+  });
+
+  it("accepts a structured message content object when the endpoint returns one", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({ choices: [{ message: { content: validClaims } }] }), { status: 200 }));
     const result = await extractClaims(validArtifact, { fetchImpl: fetchMock });
     expect(result.status).toBe("live");
     expect(result.data).toEqual(validClaims);

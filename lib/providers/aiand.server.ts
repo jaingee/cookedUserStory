@@ -21,6 +21,48 @@ export const requirementExtractionSchema = z.object({
 
 export type RequirementExtraction = z.infer<typeof requirementExtractionSchema>;
 
+const AIAND_REQUIREMENT_EXTRACTION_JSON_SCHEMA = {
+  type: "object",
+  additionalProperties: false,
+  required: ["category", "summary", "requirements", "assumptions"],
+  properties: {
+    category: { type: "string", enum: ["laptop", "air_purifier", "lab_oven"] },
+    summary: { type: "string", minLength: 1, maxLength: 500 },
+    requirements: {
+      type: "array",
+      minItems: 1,
+      maxItems: 30,
+      items: {
+        type: "object",
+        additionalProperties: false,
+        required: ["id", "criterionKey", "label", "kind", "operator", "target", "unit", "weight", "source", "needsConfirmation"],
+        properties: {
+          id: { type: "string", minLength: 1, maxLength: 100 },
+          criterionKey: {
+            type: "string",
+            enum: [
+              "price_sgd", "ram_gb", "storage_gb", "battery_life_h", "weight_kg", "geekbench_6_multicore",
+              "cadr_m3h", "coverage_m2", "noise_dba", "annual_filter_cost_sgd", "power_consumption_w",
+              "max_temperature_c", "chamber_volume_l", "electrical_profile", "temperature_uniformity_c",
+            ],
+          },
+          label: { type: "string", minLength: 1, maxLength: 160 },
+          kind: { type: "string", enum: ["mandatory", "preferred"] },
+          operator: { enum: ["gte", "lte", "eq", null] },
+          target: { type: ["number", "string", "boolean", "null"] },
+          unit: {
+            enum: ["SGD", "GB", "h", "kg", "Geekbench 6 multicore points", "m3/h", "m2", "dB(A)", "SGD/year", "W", "Â°C", "L", "Â±Â°C", "electrical_profile", null],
+          },
+          weight: { type: "number", minimum: 0 },
+          source: { type: "string", enum: ["user", "ai_extracted", "category_default"] },
+          needsConfirmation: { type: "boolean" },
+        },
+      },
+    },
+    assumptions: { type: "array", maxItems: 20, items: { type: "string", minLength: 1, maxLength: 500 } },
+  },
+} as const;
+
 type FetchLike = typeof fetch;
 type ProviderOptions = {
   cache?: RequirementExtraction;
@@ -62,31 +104,55 @@ function chatCompletionsEndpoint(baseUrl: string): string | null {
   }
 }
 
-function validateRequirements(data: unknown, categoryHint?: ProductCategory): RequirementExtraction | null {
+type ValidationIssue = { path: string; code: string };
+
+function issuePath(path: PropertyKey[]): string {
+  return path.length === 0 ? "$" : path.map((part) => String(part)).join(".");
+}
+
+function validateRequirementsDetailed(data: unknown, categoryHint?: ProductCategory): { data: RequirementExtraction | null; issues: ValidationIssue[] } {
   const parsed = requirementExtractionSchema.safeParse(data);
-  if (!parsed.success || (categoryHint && parsed.data.category !== categoryHint)) return null;
+  if (!parsed.success) return { data: null, issues: parsed.error.issues.map((issue) => ({ path: issuePath(issue.path), code: issue.code })) };
+  if (categoryHint && parsed.data.category !== categoryHint) return { data: null, issues: [{ path: "category", code: "custom" }] };
 
   const config = categoryConfigById[parsed.data.category];
   const criteria = new Map(config.criteria.map((criterion) => [criterion.key, criterion]));
   const ids = new Set<string>();
-  for (const requirement of parsed.data.requirements) {
+  const issues: ValidationIssue[] = [];
+  for (const [index, requirement] of parsed.data.requirements.entries()) {
     const criterion = criteria.get(requirement.criterionKey);
-    if (!criterion || ids.has(requirement.id) || requirement.unit !== criterion.unit) return null;
+    if (!criterion) issues.push({ path: `requirements.${index}.criterionKey`, code: "custom" });
+    if (ids.has(requirement.id)) issues.push({ path: `requirements.${index}.id`, code: "custom" });
     ids.add(requirement.id);
-    if (!criterion.supportedRequirementKinds.includes(requirement.kind)) return null;
+    if (criterion && !criterion.supportedRequirementKinds.includes(requirement.kind)) issues.push({ path: `requirements.${index}.kind`, code: "custom" });
+    if (criterion && requirement.unit !== criterion.unit) issues.push({ path: `requirements.${index}.unit`, code: "custom" });
     if (requirement.kind === "mandatory") {
-      if (!requirement.operator || !criterion.allowedMandatoryOperators.includes(requirement.operator)) return null;
-      if (!valueMatchesType(requirement.target, criterion.valueType)) return null;
-      if (requirement.weight !== 0) return null;
+      if (criterion && (!requirement.operator || !criterion.allowedMandatoryOperators.includes(requirement.operator))) issues.push({ path: `requirements.${index}.operator`, code: "custom" });
+      if (criterion && !valueMatchesType(requirement.target, criterion.valueType)) issues.push({ path: `requirements.${index}.target`, code: "custom" });
+      if (requirement.weight !== 0) issues.push({ path: `requirements.${index}.weight`, code: "custom" });
     } else if (requirement.operator !== null || requirement.target !== null || !Number.isFinite(requirement.weight) || requirement.weight < 0) {
-      return null;
+      issues.push({ path: `requirements.${index}`, code: "custom" });
     }
   }
-  return parsed.data;
+  return issues.length > 0 ? { data: null, issues } : { data: parsed.data, issues: [] };
+}
+
+function validateRequirements(data: unknown, categoryHint?: ProductCategory): RequirementExtraction | null {
+  return validateRequirementsDetailed(data, categoryHint).data;
+}
+
+function validationWarning(issues: ValidationIssue[]): string {
+  const summary = issues.slice(0, 12).map((issue) => `${issue.path}:${issue.code}`).join(", ");
+  return summary ? `AI& returned invalid structured data. Validation issues: ${summary}.` : "AI& returned invalid structured data.";
 }
 
 function valueMatchesType(value: Requirement["target"], valueType: "number" | "string" | "boolean"): boolean {
   return value !== null && typeof value === valueType && (valueType !== "number" || Number.isFinite(value));
+}
+
+function parseJsonContent(value: string): unknown {
+  const normalized = value.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+  try { return JSON.parse(normalized); } catch { return null; }
 }
 
 function extractUpstreamPayload(body: unknown): unknown {
@@ -97,7 +163,7 @@ function extractUpstreamPayload(body: unknown): unknown {
     const message = (choices[0] as Record<string, unknown>).message;
     const content = message && typeof message === "object" ? (message as Record<string, unknown>).content : null;
     if (typeof content === "string") {
-      try { return JSON.parse(content); } catch { return null; }
+      return parseJsonContent(content);
     }
     if (Array.isArray(content)) {
       const text = content
@@ -105,9 +171,10 @@ function extractUpstreamPayload(body: unknown): unknown {
         .join("")
         .trim();
       if (text) {
-        try { return JSON.parse(text); } catch { return null; }
+        return parseJsonContent(text);
       }
     }
+    if (content && typeof content === "object") return content;
   }
   const output = record.output ?? record.data ?? record.result;
   if (typeof output === "string") {
@@ -156,15 +223,22 @@ export async function extractRequirements(
           },
           { role: "user", content: JSON.stringify({ description, categoryHint: categoryHint ?? null }) },
         ],
-        response_format: { type: "json_object" },
+        response_format: {
+          type: "json_schema",
+          json_schema: {
+            name: "purchase_requirements",
+            strict: true,
+            schema: AIAND_REQUIREMENT_EXTRACTION_JSON_SCHEMA,
+          },
+        },
       }),
       signal: controller.signal,
     });
     if (!response.ok) return fallback("upstream_error", "AI& returned an unsuccessful response.");
-    const data = validateRequirements(extractUpstreamPayload(await response.json()), categoryHint);
-    return data
-      ? envelope("live", "live_provider", data, undefined, undefined, Date.now() - started)
-      : fallback("invalid_response", "AI& returned invalid structured data.");
+    const validation = validateRequirementsDetailed(extractUpstreamPayload(await response.json()), categoryHint);
+    return validation.data
+      ? envelope("live", "live_provider", validation.data, undefined, undefined, Date.now() - started)
+      : fallback("invalid_response", validationWarning(validation.issues));
   } catch (error) {
     const timedOut = error instanceof DOMException ? error.name === "AbortError" : error instanceof Error && error.name === "TimeoutError";
     return fallback(timedOut ? "timeout" : "network_error", timedOut ? "AI& request timed out." : "AI& request failed.");

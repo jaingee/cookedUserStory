@@ -36,6 +36,39 @@ export const claimExtractionSchema = z.object({
 export type RetrievalArtifact = z.infer<typeof retrievalArtifactSchema>;
 export type ClaimExtraction = z.infer<typeof claimExtractionSchema>;
 
+const DOUBLEWORD_CLAIM_EXTRACTION_JSON_SCHEMA = {
+  type: "object",
+  additionalProperties: false,
+  required: ["productId", "claims", "warnings"],
+  properties: {
+    productId: { type: "string", minLength: 1, maxLength: 100 },
+    claims: {
+      type: "array",
+      maxItems: 50,
+      items: {
+        type: "object",
+        additionalProperties: false,
+        required: ["criterionKey", "value", "unit", "claimStatus", "evidenceText"],
+        properties: {
+          criterionKey: {
+            type: "string",
+            enum: [
+              "price_sgd", "ram_gb", "storage_gb", "battery_life_h", "weight_kg", "geekbench_6_multicore",
+              "cadr_m3h", "coverage_m2", "noise_dba", "annual_filter_cost_sgd", "power_consumption_w",
+              "max_temperature_c", "chamber_volume_l", "electrical_profile", "temperature_uniformity_c",
+            ],
+          },
+          value: { type: ["number", "string", "boolean", "null"] },
+          unit: { enum: ["SGD", "GB", "h", "kg", "Geekbench 6 multicore points", "m3/h", "m2", "dB(A)", "SGD/year", "W", "Â°C", "L", "Â±Â°C", "electrical_profile", null] },
+          claimStatus: { type: "string", enum: ["manufacturer_reported", "retailer_reported", "third_party_reported", "user_supplied", "estimated", "calculated", "missing", "conflicting"] },
+          evidenceText: { type: "string", minLength: 1, maxLength: 500 },
+        },
+      },
+    },
+    warnings: { type: "array", maxItems: 20, items: { type: "string", minLength: 1, maxLength: 500 } },
+  },
+} as const;
+
 type FetchLike = typeof fetch;
 type ProviderOptions = {
   cache?: ClaimExtraction;
@@ -60,8 +93,8 @@ function envelope(
 }
 
 function timeoutMs(): number {
-  const parsed = Number(process.env.DOUBLEWORD_TIMEOUT_MS ?? "10000");
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : 10000;
+  const parsed = Number(process.env.DOUBLEWORD_TIMEOUT_MS ?? "20000");
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 20000;
 }
 
 function chatCompletionsEndpoint(baseUrl: string): string | null {
@@ -77,6 +110,11 @@ function chatCompletionsEndpoint(baseUrl: string): string | null {
 
 function sanitizeEvidence(text: string): string {
   return text.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, 500);
+}
+
+function parseJsonContent(value: string): unknown {
+  const normalized = value.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+  try { return JSON.parse(normalized); } catch { return null; }
 }
 
 function validateClaims(data: unknown, artifact: RetrievalArtifact): ClaimExtraction | null {
@@ -120,7 +158,7 @@ function extractUpstreamPayload(body: unknown): unknown {
     const message = (choices[0] as Record<string, unknown>).message;
     const content = message && typeof message === "object" ? (message as Record<string, unknown>).content : null;
     if (typeof content === "string") {
-      try { return JSON.parse(content); } catch { return null; }
+      return parseJsonContent(content);
     }
     if (Array.isArray(content)) {
       const text = content
@@ -128,9 +166,10 @@ function extractUpstreamPayload(body: unknown): unknown {
         .join("")
         .trim();
       if (text) {
-        try { return JSON.parse(text); } catch { return null; }
+        return parseJsonContent(text);
       }
     }
+    if (content && typeof content === "object") return content;
   }
   const output = record.output ?? record.data ?? record.result;
   if (typeof output === "string") {
@@ -178,7 +217,14 @@ export async function extractClaims(
           },
           { role: "user", content: JSON.stringify(artifact.data) },
         ],
-        response_format: { type: "json_object" },
+        response_format: {
+          type: "json_schema",
+          json_schema: {
+            name: "product_claim_extraction",
+            strict: true,
+            schema: DOUBLEWORD_CLAIM_EXTRACTION_JSON_SCHEMA,
+          },
+        },
       }),
       signal: controller.signal,
     });

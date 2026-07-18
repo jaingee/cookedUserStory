@@ -1,0 +1,9 @@
+{
+  "productId": "laptop-asus-zenbook-ux3405",
+  "sourceUrl": "https://www.asus.com/sg/laptops/for-home/zenbook/asus-zenbook-14-oled-ux3405/techspec/",
+  "finalUrl": "https://www.asus.com/sg/laptops/for-home/zenbook/asus-zenbook-14-oled-ux3405/techspec/",
+  "httpStatus": 200,
+  "retrievedAt": "2026-07-18T00:00:00.000Z",
+  "excerpt": "Synthetic demo retrieval excerpt for the ASUS Zenbook 14 OLED UX3405 family. The exact UX3405MA variant was not live-verified, so this fixture makes no manufacturer-verified specification claims.",
+  "excerptSha256": "2e73fecf68b9ff2c3bccf5ba630e0723469ff4cb145cceac83382d8a45df7c8c"
+}

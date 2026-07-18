@@ -3,7 +3,7 @@ import "server-only";
 import { fetch as undiciFetch, ProxyAgent } from "undici";
 
 import { providerResultSchema } from "@/lib/contracts";
-import cachedArtifactJson from "@/data/provider-fixtures/oxylabs/asus-zenbook-14-oled-ux3405.json";
+import syntheticFixtureJson from "@/data/provider-fixtures/oxylabs/laptop-asus-zenbook-ux3405.json";
 import {
   ASUS_ZENBOOK_PRODUCT_ID,
   MAX_RESPONSE_BYTES,
@@ -36,7 +36,7 @@ interface ProviderConfig {
   proxyUrl: string;
   country: string;
   timeoutMs: number;
-  mode: "auto" | "cache-only";
+  mode: "auto" | "cache_only";
   proxyUrlHasCredentials: boolean;
 }
 
@@ -50,8 +50,9 @@ class RetrievalFailure extends Error {
 }
 
 function readMode(): ProviderConfig["mode"] {
-  return process.env.DEMO_PROVIDER_MODE?.trim().toLowerCase() === "cache-only"
-    ? "cache-only"
+  const mode = process.env.DEMO_PROVIDER_MODE?.trim().toLowerCase();
+  return mode === "cache_only" || mode === "cache-only"
+    ? "cache_only"
     : "auto";
 }
 
@@ -89,7 +90,7 @@ function readConfig(): ProviderConfig | null {
   }
 }
 
-function validateCachedArtifact(value: unknown): RetrievalArtifact | null {
+function validateSyntheticFixture(value: unknown): RetrievalArtifact | null {
   const parsed = retrievalArtifactSchema.safeParse(value);
   if (!parsed.success || parsed.data.productId !== ASUS_ZENBOOK_PRODUCT_ID) {
     return null;
@@ -99,7 +100,7 @@ function validateCachedArtifact(value: unknown): RetrievalArtifact | null {
   if (
     parsed.data.sourceUrl !== expectedSourceUrl ||
     !isAllowedTargetUrl(parsed.data.finalUrl) ||
-    parsed.data.excerptSha256 !== requireDigest(parsed.data.excerpt)
+    parsed.data.excerptSha256 !== digestForSyntheticFixture(parsed.data.excerpt)
   ) {
     return null;
   }
@@ -107,7 +108,7 @@ function validateCachedArtifact(value: unknown): RetrievalArtifact | null {
   return parsed.data;
 }
 
-function requireDigest(value: string): string {
+function digestForSyntheticFixture(value: string): string {
   return makeRetrievalArtifact({
     productId: ASUS_ZENBOOK_PRODUCT_ID,
     sourceUrl: OXYLABS_TARGETS[ASUS_ZENBOOK_PRODUCT_ID],
@@ -118,22 +119,22 @@ function requireDigest(value: string): string {
   }).excerptSha256;
 }
 
-function getCachedArtifact(): RetrievalArtifact | null {
-  return validateCachedArtifact(cachedArtifactJson);
+function getSyntheticFixture(): RetrievalArtifact | null {
+  return validateSyntheticFixture(syntheticFixtureJson);
 }
 
-function cachedResult(status: "cached" | "fallback", warning?: string): OxylabsProviderResult | null {
-  const data = getCachedArtifact();
+function syntheticFallbackResult(): OxylabsProviderResult | null {
+  const data = getSyntheticFixture();
   if (!data) {
     return null;
   }
 
   return providerResultSchema(retrievalArtifactSchema).parse({
     provider: "oxylabs",
-    status,
-    origin: "cached_provider",
+    status: "fallback",
+    origin: "synthetic_fixture",
     data,
-    ...(warning ? { warning } : {}),
+    warning: "Synthetic retrieval fixture used; no valid live Oxylabs artifact was captured.",
   });
 }
 
@@ -289,13 +290,12 @@ export async function retrieveOxylabsProduct(
   }
 
   const config = readConfig();
-  const cached = cachedResult("cached");
-  if (config?.mode === "cache-only") {
-    return cached ?? failureResult(new RetrievalFailure("cache_miss", "No cached provider result is available."));
+  if (config?.mode === "cache_only") {
+    return syntheticFallbackResult() ?? failureResult(new RetrievalFailure("cache_miss", "No synthetic retrieval fixture is available."));
   }
 
   if (!config) {
-    return cachedResult("fallback", "Live provider configuration is unavailable; using cached provider data.") ??
+    return syntheticFallbackResult() ??
       failureResult(new RetrievalFailure("not_configured", "Live provider configuration is unavailable."));
   }
 
@@ -316,6 +316,6 @@ export async function retrieveOxylabsProduct(
     });
   } catch (error) {
     const failure = getFailure(error);
-    return cachedResult("fallback", "Live provider retrieval failed; using cached provider data.") ?? failureResult(failure);
+    return syntheticFallbackResult() ?? failureResult(failure);
   }
 }

@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import type { ProviderErrorCode, ProviderResult } from "@/lib/contracts";
 
-export const ASUS_ZENBOOK_PRODUCT_ID = "asus-zenbook-14-oled-ux3405" as const;
+export const ASUS_ZENBOOK_PRODUCT_ID = "laptop-asus-zenbook-ux3405" as const;
 
 const targetMap = {
   [ASUS_ZENBOOK_PRODUCT_ID]:

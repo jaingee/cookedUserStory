@@ -23,7 +23,7 @@ function configuredEnv(): void {
 
 describe("Oxylabs retrieval", () => {
   it("resolves the known product to the immutable HTTPS allowlist", () => {
-    const target = OXYLABS_TARGETS["asus-zenbook-14-oled-ux3405"];
+    const target = OXYLABS_TARGETS["laptop-asus-zenbook-ux3405"];
 
     expect(target).toBe(
       "https://www.asus.com/sg/laptops/for-home/zenbook/asus-zenbook-14-oled-ux3405/techspec/",
@@ -70,7 +70,8 @@ describe("Oxylabs retrieval", () => {
     });
 
     expect(result.status).toBe("fallback");
-    expect(result.origin).toBe("cached_provider");
+    expect(result.origin).toBe("synthetic_fixture");
+    expect(result.warning).toBe("Synthetic retrieval fixture used; no valid live Oxylabs artifact was captured.");
     expect(JSON.stringify(result)).not.toContain("test-password");
     expect(JSON.stringify(result)).not.toContain("proxy.example");
   });
@@ -82,7 +83,7 @@ describe("Oxylabs retrieval", () => {
     });
 
     expect(result.status).toBe("fallback");
-    expect(result.origin).toBe("cached_provider");
+    expect(result.origin).toBe("synthetic_fixture");
   });
 
   it("rejects unknown product IDs before transport use", async () => {
@@ -96,7 +97,7 @@ describe("Oxylabs retrieval", () => {
     expect(fetchFn).not.toHaveBeenCalled();
   });
 
-  it("falls back to the cached-real excerpt on timeout", async () => {
+  it("falls back to the synthetic fixture on timeout", async () => {
     configuredEnv();
     vi.stubEnv("OXYLABS_TIMEOUT_MS", "10");
 
@@ -105,19 +106,32 @@ describe("Oxylabs retrieval", () => {
     });
 
     expect(result.status).toBe("fallback");
-    expect(result.origin).toBe("cached_provider");
-    expect(result.data?.excerpt).toContain("32GB LPDDR5X");
+    expect(result.origin).toBe("synthetic_fixture");
+    expect(result.warning).toBe("Synthetic retrieval fixture used; no valid live Oxylabs artifact was captured.");
   });
 
   it("uses the cache without transport in cache-only mode", async () => {
     configuredEnv();
-    vi.stubEnv("DEMO_PROVIDER_MODE", "cache-only");
+    vi.stubEnv("DEMO_PROVIDER_MODE", "cache_only");
     const fetchFn = vi.fn(async () => new Response("should not fetch", { status: 200 }));
 
     const result = await retrieveOxylabsProduct(ASUS_ZENBOOK_PRODUCT_ID, { fetchFn });
 
-    expect(result.status).toBe("cached");
-    expect(result.origin).toBe("cached_provider");
+    expect(result.status).toBe("fallback");
+    expect(result.origin).toBe("synthetic_fixture");
+    expect(result.warning).toBe("Synthetic retrieval fixture used; no valid live Oxylabs artifact was captured.");
+    expect(fetchFn).not.toHaveBeenCalled();
+  });
+
+  it("accepts the legacy cache-only spelling without network access", async () => {
+    configuredEnv();
+    vi.stubEnv("DEMO_PROVIDER_MODE", "cache-only");
+    const fetchFn = vi.fn(async () => new Response("should not fetch", { status: 200 }));
+
+    const result = await retrieveOxylabsProduct("laptop-asus-zenbook-ux3405", { fetchFn });
+
+    expect(result.status).toBe("fallback");
+    expect(result.origin).toBe("synthetic_fixture");
     expect(fetchFn).not.toHaveBeenCalled();
   });
 
@@ -125,6 +139,6 @@ describe("Oxylabs retrieval", () => {
     const result = await retrieveOxylabsProduct(ASUS_ZENBOOK_PRODUCT_ID);
 
     expect(result.status).toBe("fallback");
-    expect(result.origin).toBe("cached_provider");
+    expect(result.origin).toBe("synthetic_fixture");
   });
 });

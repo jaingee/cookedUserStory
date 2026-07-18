@@ -8,7 +8,7 @@ export const syntheticDoublewordFixture: ClaimExtraction = {
       criterionKey: "ram_gb",
       value: 16,
       unit: "GB",
-      claimStatus: "manufacturer_reported",
+      claimStatus: "user_supplied",
       evidenceText: "Synthetic demo claim: 16 GB RAM.",
     },
   ],

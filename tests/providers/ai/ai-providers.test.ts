@@ -28,12 +28,39 @@ describe("AI& provider", () => {
   });
 
   it("accepts a valid live response and validates the extracted requirements", async () => {
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(JSON.stringify({ output: validAiData }), { status: 200 })));
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({ output: validAiData }), { status: 200 }));
+    vi.stubGlobal("fetch", fetchMock);
     const result = await extractRequirements("I need a laptop under S$1,800 with at least 16 GB RAM for development.");
     expect(result.status).toBe("live");
     expect(result.origin).toBe("live_provider");
     expect(result.data).toEqual(validAiData);
     expect(requirementExtractionSchema.safeParse(result.data).success).toBe(true);
+    const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+    const body = JSON.parse(String(init.body));
+    expect(url).toBe("https://aiand.test/v1/chat/completions");
+    expect(body).not.toHaveProperty("input");
+    expect(body.stream).toBe(false);
+    expect(body.messages).toHaveLength(2);
+    expect(body.messages[0].role).toBe("system");
+    expect(body.messages[1].content).toContain("categoryHint");
+  });
+
+  it("normalizes trailing slashes on the AI& base URL", async () => {
+    process.env.AIAND_BASE_URL = "https://aiand.test/v1///";
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({ output: validAiData }), { status: 200 }));
+    const result = await extractRequirements("I need a laptop for development and travel.", undefined, { fetchImpl: fetchMock });
+    expect(result.status).toBe("live");
+    expect(fetchMock.mock.calls[0]?.[0]).toBe("https://aiand.test/v1/chat/completions");
+  });
+
+  it("rejects a non-HTTPS AI& base URL without making a request", async () => {
+    process.env.AIAND_BASE_URL = "http://aiand.test/v1";
+    const fetchMock = vi.fn();
+    const result = await extractRequirements("I need a laptop for development and travel.", undefined, { fetchImpl: fetchMock });
+    expect(result.status).toBe("unavailable");
+    expect(result.origin).toBeNull();
+    expect(result.errorCode).toBe("unsafe_url");
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it("rejects invalid model output and returns an unavailable envelope without coercion", async () => {
@@ -92,11 +119,38 @@ describe("Doubleword provider", () => {
   });
 
   it("accepts valid structured claims", async () => {
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(JSON.stringify({ output: validClaims }), { status: 200 })));
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({ output: validClaims }), { status: 200 }));
+    vi.stubGlobal("fetch", fetchMock);
     const result = await extractClaims(validArtifact);
     expect(result.status).toBe("live");
     expect(result.data).toEqual(validClaims);
     expect(claimExtractionSchema.safeParse(result.data).success).toBe(true);
+    const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+    const body = JSON.parse(String(init.body));
+    expect(url).toBe("https://doubleword.test/v1/chat/completions");
+    expect(body).not.toHaveProperty("input");
+    expect(body.stream).toBe(false);
+    expect(body.messages).toHaveLength(2);
+    expect(body.messages[0].role).toBe("system");
+    expect(body.messages[1].content).toContain("retrievedText");
+  });
+
+  it("normalizes trailing slashes on the Doubleword base URL", async () => {
+    process.env.DOUBLEWORD_BASE_URL = "https://doubleword.test/v1///";
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({ output: validClaims }), { status: 200 }));
+    const result = await extractClaims(validArtifact, { fetchImpl: fetchMock });
+    expect(result.status).toBe("live");
+    expect(fetchMock.mock.calls[0]?.[0]).toBe("https://doubleword.test/v1/chat/completions");
+  });
+
+  it("rejects an invalid Doubleword base URL without making a request", async () => {
+    process.env.DOUBLEWORD_BASE_URL = "not-a-url";
+    const fetchMock = vi.fn();
+    const result = await extractClaims(validArtifact, { fetchImpl: fetchMock });
+    expect(result.status).toBe("unavailable");
+    expect(result.origin).toBeNull();
+    expect(result.errorCode).toBe("unsafe_url");
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it("omits an unsupported criterion, records a warning, and returns no invented value", async () => {
@@ -129,6 +183,12 @@ describe("Doubleword provider", () => {
     expect(result.status).toBe("fallback");
     expect(result.origin).toBe("cached_provider");
     expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("keeps the synthetic fixture claim user-supplied", async () => {
+    const { syntheticDoublewordFixture } = await import("@/data/provider-fixtures/doubleword/synthetic");
+    expect(syntheticDoublewordFixture.claims[0]?.claimStatus).toBe("user_supplied");
+    expect(syntheticDoublewordFixture.warnings.join(" ")).toContain("Synthetic fixture");
   });
 });
 

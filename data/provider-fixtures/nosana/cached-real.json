@@ -1,0 +1,19 @@
+{
+  "warnings": [
+    {
+      "productId": "bravo",
+      "criterionKey": "battery",
+      "severity": "warning",
+      "message": "Confirm the missing battery evidence with the supplier.",
+      "action": "confirm"
+    },
+    {
+      "productId": "charlie",
+      "criterionKey": "price",
+      "severity": "info",
+      "message": "Review the conflicting price source before presenting it.",
+      "action": "review_source"
+    }
+  ],
+  "reviewedAt": "2026-07-18T07:00:00.000Z"
+}

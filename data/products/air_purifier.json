@@ -1,0 +1,59 @@
+[
+  {
+    "id": "air-purifier-xiaomi-smart-4-pro",
+    "category": "air_purifier",
+    "manufacturer": "Xiaomi",
+    "model": "Smart Air Purifier 4 Pro",
+    "displayName": "Xiaomi Smart Air Purifier 4 Pro",
+    "productUrl": null,
+    "price": { "amount": null, "currency": "SGD" },
+    "specifications": {
+      "cadr_m3h": { "value": null, "unit": "m3/h", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "coverage_m2": { "value": null, "unit": "m2", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "noise_dba": { "value": null, "unit": "dB(A)", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "annual_filter_cost_sgd": { "value": null, "unit": "SGD/year", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "power_consumption_w": { "value": null, "unit": "W", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] }
+    },
+    "evidence": [
+      { "id": "fixture-air-xiaomi", "sourceUrl": null, "sourceTitle": "Owner-approved fixture brief", "retrievedAt": "2026-07-18T00:00:00.000Z", "excerpt": "Brief names the Xiaomi Smart Air Purifier 4 Pro.", "origin": "prepared_fixture", "claimStatus": "user_supplied" }
+    ]
+  },
+  {
+    "id": "air-purifier-philips-pureprotect-3200-ac3220-10",
+    "category": "air_purifier",
+    "manufacturer": "Philips",
+    "model": "PureProtect 3200 AC3220/10",
+    "displayName": "Philips PureProtect 3200 AC3220/10",
+    "productUrl": null,
+    "price": { "amount": null, "currency": "SGD" },
+    "specifications": {
+      "cadr_m3h": { "value": null, "unit": "m3/h", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "coverage_m2": { "value": null, "unit": "m2", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "noise_dba": { "value": null, "unit": "dB(A)", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "annual_filter_cost_sgd": { "value": null, "unit": "SGD/year", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "power_consumption_w": { "value": null, "unit": "W", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] }
+    },
+    "evidence": [
+      { "id": "fixture-air-philips", "sourceUrl": null, "sourceTitle": "Owner-approved fixture brief", "retrievedAt": "2026-07-18T00:00:00.000Z", "excerpt": "Brief names the Philips PureProtect 3200 AC3220/10.", "origin": "prepared_fixture", "claimStatus": "user_supplied" }
+    ]
+  },
+  {
+    "id": "air-purifier-levoit-core-400s",
+    "category": "air_purifier",
+    "manufacturer": "Levoit",
+    "model": "Core 400S",
+    "displayName": "Levoit Core 400S",
+    "productUrl": null,
+    "price": { "amount": null, "currency": "SGD" },
+    "specifications": {
+      "cadr_m3h": { "value": null, "unit": "m3/h", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "coverage_m2": { "value": null, "unit": "m2", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "noise_dba": { "value": null, "unit": "dB(A)", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "annual_filter_cost_sgd": { "value": null, "unit": "SGD/year", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "power_consumption_w": { "value": null, "unit": "W", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] }
+    },
+    "evidence": [
+      { "id": "fixture-air-levoit", "sourceUrl": null, "sourceTitle": "Owner-approved fixture brief", "retrievedAt": "2026-07-18T00:00:00.000Z", "excerpt": "Brief names the Levoit Core 400S.", "origin": "prepared_fixture", "claimStatus": "user_supplied" }
+    ]
+  }
+]

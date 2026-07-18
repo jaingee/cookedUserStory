@@ -1,0 +1,59 @@
+[
+  {
+    "id": "lab-oven-binder-ed-56",
+    "category": "lab_oven",
+    "manufacturer": "BINDER",
+    "model": "ED 56",
+    "displayName": "BINDER ED 56",
+    "productUrl": null,
+    "price": { "amount": null, "currency": "SGD" },
+    "specifications": {
+      "max_temperature_c": { "value": null, "unit": "°C", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "chamber_volume_l": { "value": null, "unit": "L", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "electrical_profile": { "value": null, "unit": "electrical_profile", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "temperature_uniformity_c": { "value": null, "unit": "±°C", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "power_consumption_w": { "value": null, "unit": "W", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] }
+    },
+    "evidence": [
+      { "id": "fixture-oven-binder", "sourceUrl": null, "sourceTitle": "Owner-approved fixture brief", "retrievedAt": "2026-07-18T00:00:00.000Z", "excerpt": "Brief names the BINDER ED 56 lab oven.", "origin": "prepared_fixture", "claimStatus": "user_supplied" }
+    ]
+  },
+  {
+    "id": "lab-oven-memmert-un55",
+    "category": "lab_oven",
+    "manufacturer": "Memmert",
+    "model": "UN55",
+    "displayName": "Memmert UN55",
+    "productUrl": null,
+    "price": { "amount": null, "currency": "SGD" },
+    "specifications": {
+      "max_temperature_c": { "value": null, "unit": "°C", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "chamber_volume_l": { "value": null, "unit": "L", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "electrical_profile": { "value": null, "unit": "electrical_profile", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "temperature_uniformity_c": { "value": null, "unit": "±°C", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "power_consumption_w": { "value": null, "unit": "W", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] }
+    },
+    "evidence": [
+      { "id": "fixture-oven-memmert", "sourceUrl": null, "sourceTitle": "Owner-approved fixture brief", "retrievedAt": "2026-07-18T00:00:00.000Z", "excerpt": "Brief names the Memmert UN55 lab oven.", "origin": "prepared_fixture", "claimStatus": "user_supplied" }
+    ]
+  },
+  {
+    "id": "lab-oven-thermo-heratherm-ogs60",
+    "category": "lab_oven",
+    "manufacturer": "Thermo Scientific",
+    "model": "Heratherm OGS60",
+    "displayName": "Thermo Scientific Heratherm OGS60",
+    "productUrl": null,
+    "price": { "amount": null, "currency": "SGD" },
+    "specifications": {
+      "max_temperature_c": { "value": null, "unit": "°C", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "chamber_volume_l": { "value": null, "unit": "L", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "electrical_profile": { "value": null, "unit": "electrical_profile", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "temperature_uniformity_c": { "value": null, "unit": "±°C", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "power_consumption_w": { "value": null, "unit": "W", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] }
+    },
+    "evidence": [
+      { "id": "fixture-oven-thermo", "sourceUrl": null, "sourceTitle": "Owner-approved fixture brief", "retrievedAt": "2026-07-18T00:00:00.000Z", "excerpt": "Brief names the Thermo Scientific Heratherm OGS60 lab oven.", "origin": "prepared_fixture", "claimStatus": "user_supplied" }
+    ]
+  }
+]

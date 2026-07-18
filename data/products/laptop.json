@@ -1,0 +1,59 @@
+[
+  {
+    "id": "laptop-apple-macbook-air-m4",
+    "category": "laptop",
+    "manufacturer": "Apple",
+    "model": "MacBook Air 13-inch M4",
+    "displayName": "Apple MacBook Air 13-inch M4, 16 GB RAM / 512 GB storage",
+    "productUrl": null,
+    "price": { "amount": null, "currency": "SGD" },
+    "specifications": {
+      "ram_gb": { "value": 16, "unit": "GB", "origin": "prepared_fixture", "claimStatus": "user_supplied", "confidence": "high", "evidenceIds": ["fixture-laptop-apple"] },
+      "storage_gb": { "value": 512, "unit": "GB", "origin": "prepared_fixture", "claimStatus": "user_supplied", "confidence": "high", "evidenceIds": ["fixture-laptop-apple"] },
+      "battery_life_h": { "value": null, "unit": "h", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "weight_kg": { "value": null, "unit": "kg", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "geekbench_6_multicore": { "value": null, "unit": "Geekbench 6 multicore points", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] }
+    },
+    "evidence": [
+      { "id": "fixture-laptop-apple", "sourceUrl": null, "sourceTitle": "Owner-approved fixture brief", "retrievedAt": "2026-07-18T00:00:00.000Z", "excerpt": "Brief names the Apple MacBook Air with 16 GB RAM and 512 GB storage.", "origin": "prepared_fixture", "claimStatus": "user_supplied" }
+    ]
+  },
+  {
+    "id": "laptop-asus-zenbook-ux3405ma",
+    "category": "laptop",
+    "manufacturer": "ASUS",
+    "model": "Zenbook 14 OLED UX3405MA",
+    "displayName": "ASUS Zenbook 14 OLED UX3405MA, Core Ultra 7 / 16 GB / 1 TB",
+    "productUrl": null,
+    "price": { "amount": null, "currency": "SGD" },
+    "specifications": {
+      "ram_gb": { "value": 16, "unit": "GB", "origin": "prepared_fixture", "claimStatus": "user_supplied", "confidence": "high", "evidenceIds": ["fixture-laptop-asus"] },
+      "storage_gb": { "value": 1024, "unit": "GB", "origin": "prepared_fixture", "claimStatus": "user_supplied", "confidence": "high", "evidenceIds": ["fixture-laptop-asus"] },
+      "battery_life_h": { "value": null, "unit": "h", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "weight_kg": { "value": null, "unit": "kg", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "geekbench_6_multicore": { "value": null, "unit": "Geekbench 6 multicore points", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] }
+    },
+    "evidence": [
+      { "id": "fixture-laptop-asus", "sourceUrl": null, "sourceTitle": "Owner-approved fixture brief", "retrievedAt": "2026-07-18T00:00:00.000Z", "excerpt": "Brief names the ASUS Zenbook with Core Ultra 7, 16 GB RAM, and 1 TB storage.", "origin": "prepared_fixture", "claimStatus": "user_supplied" }
+    ]
+  },
+  {
+    "id": "laptop-lenovo-yoga-slim-7-14imh9",
+    "category": "laptop",
+    "manufacturer": "Lenovo",
+    "model": "Yoga Slim 7 14IMH9",
+    "displayName": "Lenovo Yoga Slim 7 14IMH9, Core Ultra 7 / 32 GB / 1 TB",
+    "productUrl": null,
+    "price": { "amount": null, "currency": "SGD" },
+    "specifications": {
+      "ram_gb": { "value": 32, "unit": "GB", "origin": "prepared_fixture", "claimStatus": "user_supplied", "confidence": "high", "evidenceIds": ["fixture-laptop-lenovo"] },
+      "storage_gb": { "value": 1024, "unit": "GB", "origin": "prepared_fixture", "claimStatus": "user_supplied", "confidence": "high", "evidenceIds": ["fixture-laptop-lenovo"] },
+      "battery_life_h": { "value": null, "unit": "h", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "weight_kg": { "value": null, "unit": "kg", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
+      "geekbench_6_multicore": { "value": null, "unit": "Geekbench 6 multicore points", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] }
+    },
+    "evidence": [
+      { "id": "fixture-laptop-lenovo", "sourceUrl": null, "sourceTitle": "Owner-approved fixture brief", "retrievedAt": "2026-07-18T00:00:00.000Z", "excerpt": "Brief names the Lenovo Yoga Slim with Core Ultra 7, 32 GB RAM, and 1 TB storage.", "origin": "prepared_fixture", "claimStatus": "user_supplied" }
+    ]
+  }
+]

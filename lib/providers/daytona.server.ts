@@ -83,11 +83,16 @@ function stableSerialize(value: unknown): string {
   if (Array.isArray(value)) return `[${value.map(stableSerialize).join(",")}]`;
   if (value && typeof value === "object") {
     return `{${Object.entries(value as Record<string, unknown>)
-      .sort(([left], [right]) => left.localeCompare(right))
+      .sort(([left], [right]) => compareAscii(left, right))
       .map(([key, entry]) => `${JSON.stringify(key)}:${stableSerialize(entry)}`)
       .join(",")}}`;
   }
   return JSON.stringify(value);
+}
+
+function compareAscii(left: string, right: string): number {
+  if (left === right) return 0;
+  return left < right ? -1 : 1;
 }
 
 function digest(value: unknown): string {
@@ -110,15 +115,28 @@ function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
   });
 }
 
-function stripModuleSyntax(source: string): string {
-  return source.replace(/\bexport\s+(default\s+)?/g, "");
+function sourceContractIssue(source: string): string | null {
+  if (/\bimport\b/i.test(source)) return "Daytona scorer source must not contain imports.";
+  if (/\brequire\s*\(/i.test(source)) return "Daytona scorer source must not call require().";
+  if (/\bprocess\.env\b/i.test(source)) return "Daytona scorer source must not access process.env.";
+  if (/\bfetch\s*\(/i.test(source)) return "Daytona scorer source must not call fetch().";
+  if (!/\b(?:function\s+|(?:const|let|var)\s+)(?:scoreProducts|score|calculateScore)\b/.test(source)) {
+    return "Daytona scorer source must define scoreProducts (legacy score aliases are accepted).";
+  }
+  return null;
 }
 
 function buildExecutionProgram(source: string, input: ScoringInput, inputDigest: string): string {
   return `
-${stripModuleSyntax(source)}
+${source}
 const __canonicalInput = ${JSON.stringify(input)};
-const __scorer = typeof score === "function" ? score : typeof calculateScore === "function" ? calculateScore : null;
+const __scorer = typeof scoreProducts === "function"
+  ? scoreProducts
+  : typeof score === "function"
+    ? score
+    : typeof calculateScore === "function"
+      ? calculateScore
+      : null;
 if (!__scorer) throw new Error("scorer function missing");
 const __returned = await __scorer(__canonicalInput);
 const __result = __returned && typeof __returned === "object" && "result" in __returned ? __returned.result : __returned;
@@ -180,31 +198,31 @@ function normalizedWeights(result: ScoringResult): Record<string, number> {
       `${product.productId}:${score.criterionKey}`,
       score.normalizedWeight,
     ] as const))
-    .sort(([left], [right]) => left.localeCompare(right)));
+    .sort(([left], [right]) => compareAscii(left, right)));
 }
 
 function qualificationResults(result: ScoringResult): Record<string, string> {
   return Object.fromEntries(result.rankedProducts
     .map((product) => [product.productId, product.qualification] as const)
-    .sort(([left], [right]) => left.localeCompare(right)));
+    .sort(([left], [right]) => compareAscii(left, right)));
 }
 
 function criterionScores(result: ScoringResult): unknown[] {
   return result.rankedProducts
     .flatMap((product) => product.criterionScores.map((score) => ({ productId: product.productId, ...score })))
-    .sort((left, right) => `${left.productId}:${left.criterionKey}`.localeCompare(`${right.productId}:${right.criterionKey}`));
+    .sort((left, right) => compareAscii(`${left.productId}:${left.criterionKey}`, `${right.productId}:${right.criterionKey}`));
 }
 
 function weightedScores(result: ScoringResult): Record<string, number | null> {
   return Object.fromEntries(result.rankedProducts
     .map((product) => [product.productId, product.weightedScore] as const)
-    .sort(([left], [right]) => left.localeCompare(right)));
+    .sort(([left], [right]) => compareAscii(left, right)));
 }
 
 function ranks(result: ScoringResult): Record<string, number | null> {
   return Object.fromEntries(result.rankedProducts
     .map((product) => [product.productId, product.rank] as const)
-    .sort(([left], [right]) => left.localeCompare(right)));
+    .sort(([left], [right]) => compareAscii(left, right)));
 }
 
 function compareResults(
@@ -305,7 +323,12 @@ export async function verifyScoringWithDaytona(
   const inputDigest = digest(parsed.input);
   const expectedResultDigest = digest(parsed.expectedResult);
   const expectedEngineVersion = parsed.expectedEngineVersion ?? "1.0.0";
-  if (env.DEMO_PROVIDER_MODE === "cache-only" || env.DEMO_PROVIDER_MODE === "offline") {
+  const contractIssue = sourceContractIssue(parsed.scorerSource);
+  if (contractIssue) {
+    return localFallback(parsed, "invalid_response", `${contractIssue} Local calculation remains authoritative.`, Date.now() - startedAt, now());
+  }
+  const demoMode = (env.DEMO_PROVIDER_MODE ?? "").trim().toLowerCase();
+  if (["cache_only", "cache-only", "offline"].includes(demoMode)) {
     return localFallback(parsed, "not_configured", "Daytona verification was skipped; local calculation remains authoritative.", Date.now() - startedAt, now());
   }
   if (!env.DAYTONA_API_KEY || !env.DAYTONA_API_URL) {

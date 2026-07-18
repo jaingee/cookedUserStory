@@ -54,6 +54,18 @@ export const evidenceReviewRequestSchema = z.object({
 export type EvidenceReviewRequest = z.infer<typeof evidenceReviewRequestSchema>;
 export type NosanaReviewResult = ProviderResult<EvidenceReview>;
 
+export function isReviewApplicable(review: EvidenceReview, request: EvidenceReviewRequest): boolean {
+  const products = new Map(request.products.map((product) => [product.productId, product]));
+  return review.warnings.every((warning) => {
+    if (warning.productId === null) return true;
+    const product = products.get(warning.productId);
+    if (!product) return false;
+    if (warning.criterionKey === null) return true;
+    return product.unknownKeys.includes(warning.criterionKey)
+      || product.conflictingKeys.includes(warning.criterionKey);
+  });
+}
+
 export type NosanaAdapterOptions = {
   env?: Record<string, string | undefined>;
   fetchImpl?: typeof fetch;
@@ -100,6 +112,11 @@ function safeUrl(value: string | undefined): string | null {
   } catch {
     return null;
   }
+}
+
+function normalizeDemoMode(value: string | undefined): "auto" | "cache_only" {
+  const mode = (value ?? "").trim().toLowerCase();
+  return ["cache_only", "cache-only", "offline"].includes(mode) ? "cache_only" : "auto";
 }
 
 function invalidResult(durationMs: number): NosanaReviewResult {
@@ -187,9 +204,10 @@ export async function reviewEvidenceWithNosana(
   if (!validated.success) return invalidResult(Date.now() - startedAt);
   const parsed = validated.data;
   const timeoutMs = timeoutFrom(env);
-  const cached = options.cachedReal === undefined ? parseFixture(cachedRealFixture) : parseFixture(options.cachedReal);
+  const cachedCandidate = options.cachedReal === undefined ? parseFixture(cachedRealFixture) : parseFixture(options.cachedReal);
+  const cached = cachedCandidate && isReviewApplicable(cachedCandidate, parsed) ? cachedCandidate : null;
   const synthetic = options.synthetic === undefined ? parseFixture(syntheticFixture) : parseFixture(options.synthetic);
-  const cacheOnly = env.DEMO_PROVIDER_MODE === "cache-only" || env.DEMO_PROVIDER_MODE === "offline";
+  const cacheOnly = normalizeDemoMode(env.DEMO_PROVIDER_MODE) === "cache_only";
 
   if (cacheOnly) {
     if (cached) return cachedResult(cached, "cached", Date.now() - startedAt);

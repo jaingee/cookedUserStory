@@ -68,7 +68,7 @@ const result = {
 const request = {
   scorerSource: `
     const ENGINE_VERSION = "1.0.0";
-    function score(input) {
+    function scoreProducts(input) {
       return ${JSON.stringify(result)};
     }
   `,
@@ -76,10 +76,13 @@ const request = {
   expectedResult: result,
 };
 
-function mockSandbox(output: string | Promise<string>): DaytonaSandbox {
+function mockSandbox(output: string | Promise<string>, onCode?: (code: string) => void): DaytonaSandbox {
   return {
     process: {
-      codeRun: vi.fn(async () => ({ result: await output, exitCode: 0 })),
+      codeRun: vi.fn(async (code: string) => {
+        onCode?.(code);
+        return { result: await output, exitCode: 0 };
+      }),
     },
     delete: vi.fn(async () => undefined),
   };
@@ -98,12 +101,61 @@ const env = {
 
 describe("verifyScoringWithDaytona", () => {
   it("accepts a valid matching scoring result", async () => {
-    const sandbox = mockSandbox(JSON.stringify({ engineVersion: "1.0.0", result }));
+    let executedCode = "";
+    const sandbox = mockSandbox(JSON.stringify({ engineVersion: "1.0.0", result }), (code) => { executedCode = code; });
     const response = await verifyScoringWithDaytona(request, { env, client: clientFor(sandbox) });
 
     expect(response.status).toBe("live");
     expect(response.origin).toBe("live_provider");
     expect(response.data?.match).toBe(true);
+    expect(executedCode).toContain("typeof scoreProducts === \"function\"");
+  });
+
+  it.each(["score", "calculateScore"])("accepts the legacy %s scorer alias", async (name) => {
+    const sourceRequest = { ...request, scorerSource: `function ${name}(input) { return ${JSON.stringify(result)}; }` };
+    const sandbox = mockSandbox(JSON.stringify({ engineVersion: "1.0.0", result }));
+    const response = await verifyScoringWithDaytona(sourceRequest, { env, client: clientFor(sandbox) });
+
+    expect(response.status).toBe("live");
+  });
+
+  it("rejects a missing scorer before sandbox creation", async () => {
+    const create = vi.fn();
+    const response = await verifyScoringWithDaytona({ ...request, scorerSource: "function helper(input) { return input; }" }, {
+      env,
+      client: { create },
+    });
+
+    expect(response.status).toBe("fallback");
+    expect(response.origin).toBe("local_calculation");
+    expect(response.errorCode).toBe("invalid_response");
+    expect(create).not.toHaveBeenCalled();
+  });
+
+  it.each(["import x from 'module';", "require('module');", "process.env.SECRET;", "fetch('https://example.test');"])(
+    "rejects unsafe scorer source containing %s before sandbox creation",
+    async (unsafeSource) => {
+      const create = vi.fn();
+      const response = await verifyScoringWithDaytona({ ...request, scorerSource: `function scoreProducts(input) { ${unsafeSource} return ${JSON.stringify(result)}; }` }, {
+        env,
+        client: { create },
+      });
+
+      expect(response.status).toBe("fallback");
+      expect(response.origin).toBe("local_calculation");
+      expect(create).not.toHaveBeenCalled();
+    },
+  );
+
+  it("skips Daytona creation in cache_only mode", async () => {
+    const create = vi.fn();
+    const response = await verifyScoringWithDaytona(request, {
+      env: { ...env, DEMO_PROVIDER_MODE: "cache_only" },
+      client: { create },
+    });
+
+    expect(response.status).toBe("fallback");
+    expect(create).not.toHaveBeenCalled();
   });
 
   it("returns local-authoritative fallback for an output mismatch", async () => {

@@ -4,6 +4,7 @@ vi.mock("server-only", () => ({}));
 
 import {
   evidenceReviewSchema,
+  isReviewApplicable,
   reviewEvidenceWithNosana,
   type EvidenceReview,
 } from "@/lib/providers/nosana.server";
@@ -78,7 +79,21 @@ describe("reviewEvidenceWithNosana", () => {
     expect(result.warning).toMatch(/cached-real/i);
   });
 
-  it("reports cached status in cache-only mode", async () => {
+  it("reports applicable cached status in cache_only mode", async () => {
+    const fetchImpl = vi.fn();
+    const result = await reviewEvidenceWithNosana(request, {
+      env: { ...env, DEMO_PROVIDER_MODE: "cache_only" },
+      fetchImpl,
+      cachedReal: review,
+    });
+
+    expect(result.status).toBe("cached");
+    expect(result.origin).toBe("cached_provider");
+    expect(fetchImpl).not.toHaveBeenCalled();
+    expect(isReviewApplicable(review, request)).toBe(true);
+  });
+
+  it("accepts the cache-only compatibility alias", async () => {
     const fetchImpl = vi.fn();
     const result = await reviewEvidenceWithNosana(request, {
       env: { ...env, DEMO_PROVIDER_MODE: "cache-only" },
@@ -87,7 +102,6 @@ describe("reviewEvidenceWithNosana", () => {
     });
 
     expect(result.status).toBe("cached");
-    expect(result.origin).toBe("cached_provider");
     expect(fetchImpl).not.toHaveBeenCalled();
   });
 
@@ -108,6 +122,51 @@ describe("reviewEvidenceWithNosana", () => {
     const result = await reviewEvidenceWithNosana(request, {
       env: { DEMO_PROVIDER_MODE: "cache-only" },
       cachedReal: null,
+      synthetic: null,
+    });
+
+    expect(result.status).toBe("unavailable");
+    expect(result.origin).toBeNull();
+    expect(result.data).toBeNull();
+  });
+
+  it("does not return unrelated cached-real warnings for current products", async () => {
+    const unrelated: EvidenceReview = {
+      ...review,
+      warnings: [{
+        productId: "unrelated-product",
+        criterionKey: null,
+        severity: "warning",
+        message: "Confirm this supplier evidence.",
+        action: "confirm",
+      }],
+    };
+    const result = await reviewEvidenceWithNosana(request, {
+      env: { DEMO_PROVIDER_MODE: "cache_only" },
+      cachedReal: unrelated,
+      synthetic: { ...review, warnings: [] },
+    });
+
+    expect(result.status).toBe("fallback");
+    expect(result.origin).toBe("synthetic_fixture");
+    expect(result.data?.warnings).toEqual([]);
+    expect(isReviewApplicable(unrelated, request)).toBe(false);
+  });
+
+  it("returns unavailable when cached-real data is inapplicable and no synthetic exists", async () => {
+    const unrelated: EvidenceReview = {
+      ...review,
+      warnings: [{
+        productId: "unrelated-product",
+        criterionKey: null,
+        severity: "warning",
+        message: "Confirm this supplier evidence.",
+        action: "confirm",
+      }],
+    };
+    const result = await reviewEvidenceWithNosana(request, {
+      env: { DEMO_PROVIDER_MODE: "cache_only" },
+      cachedReal: unrelated,
       synthetic: null,
     });
 

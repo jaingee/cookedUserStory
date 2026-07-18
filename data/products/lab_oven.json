@@ -6,16 +6,17 @@
     "model": "ED 56",
     "displayName": "BINDER ED 56",
     "productUrl": null,
-    "price": { "amount": null, "currency": "SGD" },
+    "price": { "amount": 7200, "currency": "SGD" },
     "specifications": {
-      "max_temperature_c": { "value": null, "unit": "°C", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "chamber_volume_l": { "value": null, "unit": "L", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "electrical_profile": { "value": null, "unit": "electrical_profile", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "temperature_uniformity_c": { "value": null, "unit": "±°C", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "power_consumption_w": { "value": null, "unit": "W", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] }
+      "price_sgd": { "value": 7200, "unit": "SGD", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-oven-binder"] },
+      "max_temperature_c": { "value": 250, "unit": "°C", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-oven-binder"] },
+      "chamber_volume_l": { "value": 56, "unit": "L", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-oven-binder"] },
+      "electrical_profile": { "value": "230V_50HZ_SINGLE_PHASE", "unit": "electrical_profile", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-oven-binder"] },
+      "temperature_uniformity_c": { "value": 2.5, "unit": "±°C", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-oven-binder"] },
+      "power_consumption_w": { "value": 1800, "unit": "W", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-oven-binder"] }
     },
     "evidence": [
-      { "id": "fixture-oven-binder", "sourceUrl": null, "sourceTitle": "Owner-approved fixture brief", "retrievedAt": "2026-07-18T00:00:00.000Z", "excerpt": "Brief names the BINDER ED 56 lab oven.", "origin": "prepared_fixture", "claimStatus": "user_supplied" }
+      { "id": "synthetic-oven-binder", "sourceUrl": null, "sourceTitle": "Synthetic hackathon demo fixture", "retrievedAt": "2026-07-18T00:00:00.000Z", "excerpt": "Synthetic hackathon demo fixture. Values are demo-only and are not a verified real-world product claim.", "origin": "synthetic_fixture", "claimStatus": "user_supplied" }
     ]
   },
   {
@@ -25,16 +26,17 @@
     "model": "UN55",
     "displayName": "Memmert UN55",
     "productUrl": null,
-    "price": { "amount": null, "currency": "SGD" },
+    "price": { "amount": 6800, "currency": "SGD" },
     "specifications": {
-      "max_temperature_c": { "value": null, "unit": "°C", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "chamber_volume_l": { "value": null, "unit": "L", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "electrical_profile": { "value": null, "unit": "electrical_profile", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "temperature_uniformity_c": { "value": null, "unit": "±°C", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "power_consumption_w": { "value": null, "unit": "W", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] }
+      "price_sgd": { "value": 6800, "unit": "SGD", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-oven-memmert"] },
+      "max_temperature_c": { "value": 300, "unit": "°C", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-oven-memmert"] },
+      "chamber_volume_l": { "value": 55, "unit": "L", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-oven-memmert"] },
+      "electrical_profile": { "value": "230V_50HZ_SINGLE_PHASE", "unit": "electrical_profile", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-oven-memmert"] },
+      "temperature_uniformity_c": { "value": 1.5, "unit": "±°C", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-oven-memmert"] },
+      "power_consumption_w": { "value": 1500, "unit": "W", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-oven-memmert"] }
     },
     "evidence": [
-      { "id": "fixture-oven-memmert", "sourceUrl": null, "sourceTitle": "Owner-approved fixture brief", "retrievedAt": "2026-07-18T00:00:00.000Z", "excerpt": "Brief names the Memmert UN55 lab oven.", "origin": "prepared_fixture", "claimStatus": "user_supplied" }
+      { "id": "synthetic-oven-memmert", "sourceUrl": null, "sourceTitle": "Synthetic hackathon demo fixture", "retrievedAt": "2026-07-18T00:00:00.000Z", "excerpt": "Synthetic hackathon demo fixture. Values are demo-only and are not a verified real-world product claim.", "origin": "synthetic_fixture", "claimStatus": "user_supplied" }
     ]
   },
   {
@@ -44,16 +46,17 @@
     "model": "Heratherm OGS60",
     "displayName": "Thermo Scientific Heratherm OGS60",
     "productUrl": null,
-    "price": { "amount": null, "currency": "SGD" },
+    "price": { "amount": 8500, "currency": "SGD" },
     "specifications": {
-      "max_temperature_c": { "value": null, "unit": "°C", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "chamber_volume_l": { "value": null, "unit": "L", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "electrical_profile": { "value": null, "unit": "electrical_profile", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "temperature_uniformity_c": { "value": null, "unit": "±°C", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "power_consumption_w": { "value": null, "unit": "W", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] }
+      "price_sgd": { "value": 8500, "unit": "SGD", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-oven-thermo"] },
+      "max_temperature_c": { "value": 320, "unit": "°C", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-oven-thermo"] },
+      "chamber_volume_l": { "value": 60, "unit": "L", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-oven-thermo"] },
+      "electrical_profile": { "value": "230V_50HZ_SINGLE_PHASE", "unit": "electrical_profile", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-oven-thermo"] },
+      "temperature_uniformity_c": { "value": 1.2, "unit": "±°C", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-oven-thermo"] },
+      "power_consumption_w": { "value": 1400, "unit": "W", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-oven-thermo"] }
     },
     "evidence": [
-      { "id": "fixture-oven-thermo", "sourceUrl": null, "sourceTitle": "Owner-approved fixture brief", "retrievedAt": "2026-07-18T00:00:00.000Z", "excerpt": "Brief names the Thermo Scientific Heratherm OGS60 lab oven.", "origin": "prepared_fixture", "claimStatus": "user_supplied" }
+      { "id": "synthetic-oven-thermo", "sourceUrl": null, "sourceTitle": "Synthetic hackathon demo fixture", "retrievedAt": "2026-07-18T00:00:00.000Z", "excerpt": "Synthetic hackathon demo fixture. Values are demo-only and are not a verified real-world product claim.", "origin": "synthetic_fixture", "claimStatus": "user_supplied" }
     ]
   }
 ]

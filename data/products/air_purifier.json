@@ -6,16 +6,17 @@
     "model": "Smart Air Purifier 4 Pro",
     "displayName": "Xiaomi Smart Air Purifier 4 Pro",
     "productUrl": null,
-    "price": { "amount": null, "currency": "SGD" },
+    "price": { "amount": 499, "currency": "SGD" },
     "specifications": {
-      "cadr_m3h": { "value": null, "unit": "m3/h", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "coverage_m2": { "value": null, "unit": "m2", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "noise_dba": { "value": null, "unit": "dB(A)", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "annual_filter_cost_sgd": { "value": null, "unit": "SGD/year", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "power_consumption_w": { "value": null, "unit": "W", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] }
+      "price_sgd": { "value": 499, "unit": "SGD", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-air-xiaomi"] },
+      "cadr_m3h": { "value": 500, "unit": "m3/h", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-air-xiaomi"] },
+      "coverage_m2": { "value": 60, "unit": "m2", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-air-xiaomi"] },
+      "noise_dba": { "value": 65, "unit": "dB(A)", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-air-xiaomi"] },
+      "annual_filter_cost_sgd": { "value": 120, "unit": "SGD/year", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-air-xiaomi"] },
+      "power_consumption_w": { "value": 45, "unit": "W", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-air-xiaomi"] }
     },
     "evidence": [
-      { "id": "fixture-air-xiaomi", "sourceUrl": null, "sourceTitle": "Owner-approved fixture brief", "retrievedAt": "2026-07-18T00:00:00.000Z", "excerpt": "Brief names the Xiaomi Smart Air Purifier 4 Pro.", "origin": "prepared_fixture", "claimStatus": "user_supplied" }
+      { "id": "synthetic-air-xiaomi", "sourceUrl": null, "sourceTitle": "Synthetic hackathon demo fixture", "retrievedAt": "2026-07-18T00:00:00.000Z", "excerpt": "Synthetic hackathon demo fixture. Values are demo-only and are not a verified real-world product claim.", "origin": "synthetic_fixture", "claimStatus": "user_supplied" }
     ]
   },
   {
@@ -25,16 +26,17 @@
     "model": "PureProtect 3200 AC3220/10",
     "displayName": "Philips PureProtect 3200 AC3220/10",
     "productUrl": null,
-    "price": { "amount": null, "currency": "SGD" },
+    "price": { "amount": 549, "currency": "SGD" },
     "specifications": {
-      "cadr_m3h": { "value": null, "unit": "m3/h", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "coverage_m2": { "value": null, "unit": "m2", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "noise_dba": { "value": null, "unit": "dB(A)", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "annual_filter_cost_sgd": { "value": null, "unit": "SGD/year", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "power_consumption_w": { "value": null, "unit": "W", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] }
+      "price_sgd": { "value": 549, "unit": "SGD", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-air-philips"] },
+      "cadr_m3h": { "value": 520, "unit": "m3/h", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-air-philips"] },
+      "coverage_m2": { "value": 65, "unit": "m2", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-air-philips"] },
+      "noise_dba": { "value": 58, "unit": "dB(A)", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-air-philips"] },
+      "annual_filter_cost_sgd": { "value": 110, "unit": "SGD/year", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-air-philips"] },
+      "power_consumption_w": { "value": 40, "unit": "W", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-air-philips"] }
     },
     "evidence": [
-      { "id": "fixture-air-philips", "sourceUrl": null, "sourceTitle": "Owner-approved fixture brief", "retrievedAt": "2026-07-18T00:00:00.000Z", "excerpt": "Brief names the Philips PureProtect 3200 AC3220/10.", "origin": "prepared_fixture", "claimStatus": "user_supplied" }
+      { "id": "synthetic-air-philips", "sourceUrl": null, "sourceTitle": "Synthetic hackathon demo fixture", "retrievedAt": "2026-07-18T00:00:00.000Z", "excerpt": "Synthetic hackathon demo fixture. Values are demo-only and are not a verified real-world product claim.", "origin": "synthetic_fixture", "claimStatus": "user_supplied" }
     ]
   },
   {
@@ -44,16 +46,17 @@
     "model": "Core 400S",
     "displayName": "Levoit Core 400S",
     "productUrl": null,
-    "price": { "amount": null, "currency": "SGD" },
+    "price": { "amount": 650, "currency": "SGD" },
     "specifications": {
-      "cadr_m3h": { "value": null, "unit": "m3/h", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "coverage_m2": { "value": null, "unit": "m2", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "noise_dba": { "value": null, "unit": "dB(A)", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "annual_filter_cost_sgd": { "value": null, "unit": "SGD/year", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] },
-      "power_consumption_w": { "value": null, "unit": "W", "origin": "prepared_fixture", "claimStatus": "missing", "confidence": "low", "evidenceIds": [] }
+      "price_sgd": { "value": 650, "unit": "SGD", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-air-levoit"] },
+      "cadr_m3h": { "value": 450, "unit": "m3/h", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-air-levoit"] },
+      "coverage_m2": { "value": 55, "unit": "m2", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-air-levoit"] },
+      "noise_dba": { "value": 55, "unit": "dB(A)", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-air-levoit"] },
+      "annual_filter_cost_sgd": { "value": 90, "unit": "SGD/year", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-air-levoit"] },
+      "power_consumption_w": { "value": 35, "unit": "W", "origin": "synthetic_fixture", "claimStatus": "user_supplied", "confidence": "low", "evidenceIds": ["synthetic-air-levoit"] }
     },
     "evidence": [
-      { "id": "fixture-air-levoit", "sourceUrl": null, "sourceTitle": "Owner-approved fixture brief", "retrievedAt": "2026-07-18T00:00:00.000Z", "excerpt": "Brief names the Levoit Core 400S.", "origin": "prepared_fixture", "claimStatus": "user_supplied" }
+      { "id": "synthetic-air-levoit", "sourceUrl": null, "sourceTitle": "Synthetic hackathon demo fixture", "retrievedAt": "2026-07-18T00:00:00.000Z", "excerpt": "Synthetic hackathon demo fixture. Values are demo-only and are not a verified real-world product claim.", "origin": "synthetic_fixture", "claimStatus": "user_supplied" }
     ]
   }
 ]

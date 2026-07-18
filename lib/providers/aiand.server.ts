@@ -51,6 +51,17 @@ function timeoutMs(): number {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : 10000;
 }
 
+function chatCompletionsEndpoint(baseUrl: string): string | null {
+  try {
+    const url = new URL(baseUrl);
+    if (url.protocol !== "https:" || url.username || url.password || url.search || url.hash) return null;
+    const path = url.pathname.replace(/\/+$/, "");
+    return `${url.origin}${path}/chat/completions`;
+  } catch {
+    return null;
+  }
+}
+
 function validateRequirements(data: unknown, categoryHint?: ProductCategory): RequirementExtraction | null {
   const parsed = requirementExtractionSchema.safeParse(data);
   if (!parsed.success || (categoryHint && parsed.data.category !== categoryHint)) return null;
@@ -117,14 +128,27 @@ export async function extractRequirements(
   const baseUrl = process.env.AIAND_BASE_URL?.trim();
   const model = process.env.AIAND_MODEL?.trim();
   if (!apiKey || !baseUrl || !model) return fallback("not_configured", "AI& is not configured.");
+  const endpoint = chatCompletionsEndpoint(baseUrl);
+  if (!endpoint) return fallback("unsafe_url", "AI& base URL must be a clean HTTPS URL.");
 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs());
   try {
-    const response = await (options.fetchImpl ?? fetch)(baseUrl, {
+    const response = await (options.fetchImpl ?? fetch)(endpoint, {
       method: "POST",
       headers: { authorization: `Bearer ${apiKey}`, "content-type": "application/json" },
-      body: JSON.stringify({ model, input: { description, categoryHint }, response_format: { type: "json_object" } }),
+      body: JSON.stringify({
+        model,
+        stream: false,
+        messages: [
+          {
+            role: "system",
+            content: "Extract a product category and purchasing requirements. Return JSON only matching the requested structure. Use only supported category criteria and never invent product specifications.",
+          },
+          { role: "user", content: JSON.stringify({ description, categoryHint: categoryHint ?? null }) },
+        ],
+        response_format: { type: "json_object" },
+      }),
       signal: controller.signal,
     });
     if (!response.ok) return fallback("upstream_error", "AI& returned an unsuccessful response.");

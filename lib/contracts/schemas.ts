@@ -33,7 +33,7 @@ export const providerResultSchema = <TData>(dataSchema: z.ZodType<TData>) =>
     .object({
       provider: providerNameSchema,
       status: providerStatusSchema,
-      origin: dataOriginSchema,
+      origin: dataOriginSchema.nullable(),
       data: dataSchema.nullable(),
       durationMs: nonNegativeFiniteNumberSchema.optional(),
       warning: z.string().trim().min(1).max(500).optional(),
@@ -47,6 +47,13 @@ export const providerResultSchema = <TData>(dataSchema: z.ZodType<TData>) =>
           message: "Live provider results must use live_provider origin.",
         });
       }
+      if (result.status === "live" && result.data === null) {
+        context.addIssue({
+          code: "custom",
+          path: ["data"],
+          message: "Live provider results must contain data.",
+        });
+      }
 
       if (result.status === "cached" && result.origin !== "cached_provider") {
         context.addIssue({
@@ -55,7 +62,36 @@ export const providerResultSchema = <TData>(dataSchema: z.ZodType<TData>) =>
           message: "Cached provider results must use cached_provider origin.",
         });
       }
+      if (result.status === "cached" && result.data === null) {
+        context.addIssue({
+          code: "custom",
+          path: ["data"],
+          message: "Cached provider results must contain data.",
+        });
+      }
 
+      if (result.status === "fallback" && result.origin === null) {
+        context.addIssue({
+          code: "custom",
+          path: ["origin"],
+          message: "Fallback results must identify their non-null origin.",
+        });
+      }
+      if (result.status === "fallback" && result.data === null) {
+        context.addIssue({
+          code: "custom",
+          path: ["data"],
+          message: "Fallback results must contain data.",
+        });
+      }
+
+      if (["unavailable", "error"].includes(result.status) && result.origin !== null) {
+        context.addIssue({
+          code: "custom",
+          path: ["origin"],
+          message: "Unavailable and error results must use null origin.",
+        });
+      }
       if (["unavailable", "error"].includes(result.status) && result.data !== null) {
         context.addIssue({
           code: "custom",

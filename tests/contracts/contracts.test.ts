@@ -11,6 +11,8 @@ import {
 } from "@/lib/contracts";
 
 describe("shared contracts", () => {
+  const providerResult = providerResultSchema(z.object({ category: z.literal("laptop") }));
+
   it("accepts representative valid contract data", () => {
     expect(
       productRecordSchema.safeParse({
@@ -64,9 +66,8 @@ describe("shared contracts", () => {
   it("rejects invalid provider origins", () => {
     expect(dataOriginSchema.safeParse("provider_magic").success).toBe(false);
 
-    const resultSchema = providerResultSchema(z.object({ category: z.literal("laptop") }));
     expect(
-      resultSchema.safeParse({
+      providerResult.safeParse({
         provider: "aiand",
         status: "live",
         origin: "cached_provider",
@@ -75,10 +76,9 @@ describe("shared contracts", () => {
     ).toBe(false);
   });
 
-  it("accepts a valid provider success envelope", () => {
-    const resultSchema = providerResultSchema(z.object({ category: z.literal("laptop") }));
+  it("accepts a valid live provider result", () => {
     expect(
-      resultSchema.safeParse({
+      providerResult.safeParse({
         provider: "aiand",
         status: "live",
         origin: "live_provider",
@@ -86,6 +86,69 @@ describe("shared contracts", () => {
         durationMs: 125,
       }).success,
     ).toBe(true);
+  });
+
+  it("accepts a valid cached provider result", () => {
+    expect(
+      providerResult.safeParse({
+        provider: "doubleword",
+        status: "cached",
+        origin: "cached_provider",
+        data: { category: "laptop" },
+      }).success,
+    ).toBe(true);
+  });
+
+  it("accepts a valid fallback provider result", () => {
+    expect(
+      providerResult.safeParse({
+        provider: "nosana",
+        status: "fallback",
+        origin: "synthetic_fixture",
+        data: { category: "laptop" },
+      }).success,
+    ).toBe(true);
+  });
+
+  it("accepts unavailable and error results with null origin and data", () => {
+    expect(
+      providerResult.safeParse({
+        provider: "oxylabs",
+        status: "unavailable",
+        origin: null,
+        data: null,
+      }).success,
+    ).toBe(true);
+    expect(
+      providerResult.safeParse({
+        provider: "daytona",
+        status: "error",
+        origin: null,
+        data: null,
+      }).success,
+    ).toBe(true);
+  });
+
+  it("rejects unavailable results with a fabricated origin", () => {
+    expect(
+      providerResult.safeParse({
+        provider: "oxylabs",
+        status: "unavailable",
+        origin: "synthetic_fixture",
+        data: null,
+      }).success,
+    ).toBe(false);
+  });
+
+  it("rejects live results with null data", () => {
+    expect(
+      providerResult.safeParse({
+        provider: "aiand",
+        status: "live",
+        origin: "live_provider",
+        data: null,
+      }).success,
+    ).toBe(false);
   });
 
   it("rejects invalid units", () => {

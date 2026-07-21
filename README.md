@@ -384,7 +384,7 @@ All checks pass on the current `main` commit. Tests use fixtures and synthetic d
 
 ## AI-Assisted Development
 
-OpenAI GPT-5.6 was used through Codex during the project for architecture review, implementation planning, debugging, testing guidance, and repository changes. After the available Codex usage limits were exhausted, continued repository work moved to Kiro. AI-assisted changes were still reviewed through repository inspection, automated checks, and human decision-making.
+OpenAI GPT-5.6 was used through Codex during the project for architecture review, implementation planning, debugging, testing guidance, and repository changes.
 
 ---
 

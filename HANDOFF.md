@@ -1,537 +1,328 @@
-# cookedUserStory — Hackathon Handoff
+# cookedUserStory — Product and Architecture Handoff
 
-## 1. Operating status
+## 1. Operating Status
 
-This file is the operational source of truth for the 3.5-hour `cookedUserStory` hackathon build. It is project context, not proof that repository state, provider access, tests, commits, or runtime behaviour are valid.
+The hackathon has ended. `cookedUserStory` is now being developed as a real product and portfolio-quality engineering project.
 
-- Project: `cookedUserStory`
-- Local repository: `C:\Users\User\Desktop\cookedUserStory`
-- Remote: `https://github.com/jaingee/cookedUserStory`
-- Primary branch: `main`
-- Repository visibility: public
-- Reviewer and Orchestrator: ChatGPT
-- Implementer: Codex
-- Product priority: usefulness first
-- Tone: friendly and lightly funny only where it does not reduce clarity
+This document records the current implemented baseline, owner-approved product direction, proposed target architecture, evidence classification, open decisions, and the next approval gate. Proposed architecture is not implemented, and the conceptual contracts below are not frozen TypeScript contracts.
 
-ChatGPT may inspect pushed GitHub content when available. It cannot inspect local-only files, unpushed changes, local runtime behaviour, or command output that has not been supplied.
+The repository is public. Public-repository security, provenance, and responsible-retrieval requirements apply to every future change. This document is a planning and governance handoff, not proof of runtime provider access or production readiness.
 
-## 2. Single MVP success condition
+## 2. Current Implemented Baseline
 
-The MVP succeeds when a user can enter a purchasing need, confirm extracted requirements, compare three products in one of three supported categories, see mandatory failures and unknowns, change weights, receive a deterministic recommendation, and open evidence and provider-status details in a working frontend.
+The tracked repository currently contains:
 
-The supported categories are exactly:
+- One Next.js App Router application written in TypeScript with React, Tailwind CSS, Zod, Vitest, ESLint, and server-side route handlers.
+- Exactly three configured categories: `laptop`, `air_purifier`, and `lab_oven`.
+- Exactly three local product fixtures for each configured category, loaded and validated by the domain layer.
+- Fixed category criteria and default requirements held in `lib/config/categories.ts`.
+- A four-stage frontend: Describe, Confirm, Compare, and Recommend.
+- Editable mandatory targets and preferred weights in the current workflow.
+- A pure local deterministic weighted scoring engine with mandatory qualification, preferred-criterion normalization, stable tie-breaking, and local authority over displayed results.
+- Five server-only provider adapters and route handlers for AI&, Oxylabs, Doubleword, Daytona, and Nosana.
+- Local product fixtures and provider fixtures or fallbacks, with data-origin and provider-mode labels exposed in the workflow.
+- A product-ID-to-URL allowlist for one bounded ASUS laptop retrieval path through Oxylabs.
+- Automated contract, category, scoring, provider, route, and integration tests based on fixtures and mocks.
+- No database, authentication, saved research jobs, resumability, queue, unrestricted candidate discovery, or multi-source research scheduler.
 
-1. `laptop`
-2. `air_purifier`
-3. `lab_oven`
+The current baseline is functional for a bounded prepared-fixture comparison. It does not represent the approved target product architecture. In particular, fixed weighted scoring is current behavior, not the target recommendation authority.
 
-The application must not claim universal product support.
+## 3. Evidence and Repository Status
 
-### Required demo path
+Evidence in this handoff is classified explicitly:
 
-The primary live demo path is `laptop`.
+### Demonstrated in repository
 
-The same frontend and scoring engine must also run prepared `air_purifier` and `lab_oven` fixtures. These two categories prove category extensibility; they do not need full live research during the presentation.
+Tracked files directly demonstrate the stack, three current categories, three fixture records per category, fixed category configuration, deterministic scoring, five server-only adapters, API routes, origin/status envelopes, bounded Oxylabs targeting, local fallback fixtures, and automated tests.
 
-Each category contains three prepared products.
+The tracked code also demonstrates that provider results are schema-validated, credentials are read server-side, and provider failures are represented without replacing the local scoring result.
 
-`air_purifier` replaces the earlier 3D-printer category because it is more broadly relatable and offers clearer consumer-facing comparison fields such as CADR, room coverage, noise, filter cost, power use, and price.
+### Reported by Implementer
 
-## 3. Fixed decisions
+The repository’s previously reported runtime checks state that Oxylabs and Doubleword returned validated live results, AI& reached the application but returned structured content that failed the expected schema, Daytona reached sandbox creation but did not complete code execution, and Nosana did not have a validated active review endpoint. These observations were not reproduced during this documentation pass and remain runtime reports, not current proof.
 
-- Use a single Next.js TypeScript application with App Router and server-side route handlers.
-- Use local JSON or TypeScript fixtures. No database and no authentication.
-- Use one shared deterministic scoring library.
-- Use category configurations rather than category-specific application forks.
-- Failed mandatory requirements disqualify a product.
-- An unknown mandatory value places the product in `needs_confirmation`; it cannot be the primary recommendation.
-- Missing preferred values receive a score of `0` and remain visibly labelled.
-- Provider failures must not crash the demo.
-- Every displayed claim must be labelled as live, cached, fixture, synthetic, estimated, calculated, reported, missing, or conflicting as applicable.
-- Secrets remain server-side and are never committed.
-- No Codex thread begins another pass automatically.
+### Reported by owner
 
-## 4. Provisional assumptions
+The owner approved the post-hackathon product direction below and reports access to an Oxylabs Advanced Residential Proxy plan. Plan quotas, pricing, targeting, restricted targets, and account-specific capabilities remain externally changing facts that must be verified before implementation.
 
-These assumptions must be tested before relying on them:
+### Proposed architecture
 
-- Sponsor credentials are available.
-- AI& and Doubleword support the selected models and structured outputs.
-- Oxylabs Residential Proxies can retrieve at least one selected public product page.
-- Daytona latency is acceptable for one scoring call.
-- Nosana has a pre-deployed or already validated workload.
-- Hackathon rules permit prepared fixtures and cached provider responses.
-- A public deployment is either unnecessary or can be completed without exposing secrets.
+Dynamic governed categories, progressive research, research jobs, evidence reconciliation, AI& comparative synthesis, persistence, and the conceptual contracts in this document are proposed and not implemented.
 
-If a provisional assumption fails, use the documented fallback or stop for an owner decision.
+### Unknown
 
-## 5. Decisions required before Wave 0
+Candidate discovery, persistence, queueing, authentication, AI& structured-output compatibility, claim-extraction boundaries, source authority, research budgets, regional handling, policy enforcement, dynamic-content strategy, evaluation data, deployment, and observability remain unresolved unless explicitly marked otherwise.
 
-The Reviewer must settle:
+## 4. Owner-Approved Product Direction
 
-1. Package manager: recommended `npm`.
-2. Styling: recommended Tailwind from the initial scaffold; otherwise plain global CSS.
-3. Test runner: recommended Vitest.
-4. Demo region and currency: recommended Singapore and SGD.
-5. Exact three products per category.
-6. Exact category criteria and default weights.
-7. AI& model ID and environment-variable names.
-8. Doubleword model ID and environment-variable names.
-9. Daytona runtime: recommended TypeScript.
-10. Nosana task: recommended evidence-quality review.
-11. Provider timeout values and whether one retry is allowed.
-12. Whether the judging rules require every sponsor call to be live.
-13. Whether preparation before the 3.5-hour timer is permitted.
-14. Deployment target, if required.
-15. Exact air-purifier criteria and units. Recommended:
-    - mandatory: maximum budget, minimum CADR, minimum room coverage;
-    - preferred: price, CADR, room coverage, noise level, filter replacement cost, and power consumption.
+The product owner has approved these decisions:
 
-Do not launch parallel implementation until the shared contracts and file ownership are accepted.
+1. The hackathon has ended.
+2. `cookedUserStory` is now a real product and portfolio-quality engineering project.
+3. The target must not remain limited to laptops, air purifiers, lab ovens, or three products per category.
+4. The target should support dynamically interpreted product categories, including examples such as headphones.
+5. Research depth must be configurable and may include substantially more candidates and sources than the current workflow.
+6. Oxylabs Residential Proxies and AI& are the two primary external providers.
+7. Oxylabs is the primary public-evidence retrieval layer.
+8. AI& is the primary requirement-interpretation and comparative-reasoning layer.
+9. Doubleword, Daytona, and Nosana are secondary optional integrations and must not complicate or block the default product path.
+10. The current hardcoded weighted scoring engine is not the desired primary recommendation mechanism.
+11. Local deterministic logic remains appropriate for schema validation, hard constraints, eligibility, unit normalization, duplicate detection, evidence provenance, conflict detection, citation validation, cache/freshness policy, safety, and target policy.
+12. AI& should perform evidence-grounded comparative reasoning rather than return a pseudo-precise numerical winner.
+13. The proposed architecture must be planned and approved before implementation begins.
 
-## 6. Sponsor roles and fallback policy
+These are owner decisions, not evidence that the proposed architecture has been validated.
 
-| Sponsor | Minimum credible role | Preferred demo mode | Required fallback |
-|---|---|---|---|
-| AI& | Classify category and extract requirements into a strict schema | Live | Cached validated requirement result |
-| Oxylabs | Retrieve one known public product URL through Residential Proxies | Live for one laptop source | Cached text excerpt and retrieval metadata |
-| Doubleword | Extract structured claims from the retrieved text | Live if prevalidated | Cached structured extraction |
-| Daytona | Execute the same versioned scoring payload in an isolated sandbox | Live | Local deterministic scoring |
-| Nosana | Review evidence and return confirmation warnings | Live only if predeployed | Cached result from a previously successful run |
+## 5. Product Scope and Boundaries
 
-Residential Proxies are a retrieval transport, not a product-search database. Product candidate discovery for the MVP comes from prepared category fixtures. Oxylabs enriches one selected source.
+The target product helps people turn an uncertain purchasing brief into a defensible, evidence-grounded comparison. It should support ordinary consumer products and ordinary business equipment when useful public information is available.
 
-A cached response may be shown only when it was captured from a real successful provider call or is explicitly labelled `synthetic_fixture`. The UI must show the actual mode.
+The product is dynamic but governed. It should use a reviewed common product ontology, curated templates where available, request-specific criteria proposed by AI&, and explicit user confirmation. It must not accept arbitrary unvalidated schemas or claim universal product coverage.
 
-At least three providers should run live in the final demo when credentials and latency allow. Recommended live set: AI&, Oxylabs, and Daytona. Doubleword and Nosana remain live-preferred but non-blocking.
+Categories involving unsafe use, regulated decisions, or inadequate public evidence should be rejected or deferred until an explicit policy and review path exists. Regional availability, currency, and source policy are part of the decision context rather than afterthoughts.
 
-## 7. Shared contracts
+## 6. Target User Workflow
 
-Wave 0 must create and freeze equivalent TypeScript contracts before parallel work begins.
+The target workflow is progressive and user-confirmed:
 
-```ts
-export type ProductCategory = "laptop" | "air_purifier" | "lab_oven";
+1. **Decision brief** — AI& interprets the use case, region, budget, mandatory constraints, priorities, assumptions, clarifying questions, and proposed research depth.
+2. **Candidate discovery** — a separate, not-yet-selected mechanism produces candidates, canonical identifiers, regional variants when known, source URLs, and discovery provenance.
+3. **Broad screening** — Oxylabs retrieves bounded evidence for identity, approximate price, regional availability, obvious mandatory specifications, and duplicate or variant signals.
+4. **Deterministic screening** — local logic removes or flags hard-constraint failures, duplicates, unsupported regions, missing mandatory evidence, malformed claims, and prohibited targets.
+5. **Adaptive shortlist** — the shortlist responds to research mode, available candidates, eligibility results, evidence quality, budget, and diminishing information gain; it is not a fixed three- or five-product invariant.
+6. **Deep evidence packs** — finalists receive separate manufacturer, technical, manual, retailer, distributor, warranty, consumables, and reputable independent-review sources where available.
+7. **Claim extraction and reconciliation** — claims retain source-level provenance, regional context, retrieval time, excerpts, hashes, statuses, and conflicts.
+8. **Comparative synthesis** — AI& compares only viable products against confirmed priorities and validated evidence.
+9. **Output validation** — local code confirms citations, eligibility, visible unknowns, conflict disclosure, fallback/stale labels, and recommendation support before results are shown.
 
-export type ProviderStatus =
-  | "live"
-  | "cached"
-  | "fallback"
-  | "unavailable"
-  | "error";
+No single AI call has unlimited authority. Each stage has its own structured contract, validation boundary, and evidence references.
 
-export type DataOrigin =
-  | "live"
-  | "cached"
-  | "fixture"
-  | "synthetic";
+## 7. Provider Roles
 
-export type ClaimStatus =
-  | "manufacturer_reported"
-  | "retailer_reported"
-  | "user_supplied"
-  | "estimated"
-  | "calculated"
-  | "missing"
-  | "conflicting";
+### Oxylabs Residential Proxies
 
-export type QualificationStatus =
-  | "qualified"
-  | "disqualified"
-  | "needs_confirmation";
+Oxylabs Residential Proxies are public-web retrieval infrastructure. The target responsibilities are approved public URL retrieval, regional and geo-targeted evidence, rotated IPs for independent retrievals, scoped sticky sessions when continuity is required, source refresh, and request and traffic metadata.
 
-export interface ProviderResult<T> {
-  provider: "aiand" | "oxylabs" | "doubleword" | "daytona" | "nosana";
-  status: ProviderStatus;
-  origin: DataOrigin;
-  data: T | null;
-  durationMs?: number;
-  warning?: string;
-  errorCode?: string;
-}
+Potential source types include manufacturer, retailer, distributor, support, manual, warranty, consumables, and reputable review pages where permitted.
 
-export interface Requirement {
-  id: string;
-  key: string;
-  label: string;
-  kind: "mandatory" | "preferred";
-  operator: "gte" | "lte" | "eq" | "includes";
-  target: number | string | boolean;
-  unit?: string;
-  weight?: number;
-}
-
-export interface EvidenceRecord {
-  id: string;
-  sourceUrl: string;
-  sourceTitle: string;
-  retrievedAt: string;
-  excerpt: string;
-  origin: DataOrigin;
-  claimStatus: ClaimStatus;
-}
-
-export interface SpecValue {
-  value: number | string | boolean | null;
-  unit?: string;
-  origin: DataOrigin;
-  claimStatus: ClaimStatus;
-  confidence: "high" | "medium" | "low";
-  evidenceIds: string[];
-}
-
-export interface ProductRecord {
-  id: string;
-  category: ProductCategory;
-  manufacturer: string;
-  model: string;
-  price: number | null;
-  currency: "SGD";
-  specifications: Record<string, SpecValue>;
-  evidence: EvidenceRecord[];
-}
-
-export interface CriterionConfig {
-  key: string;
-  label: string;
-  mode: "higher" | "lower" | "threshold";
-  unit?: string;
-  defaultWeight: number;
-}
-
-export interface CategoryConfig {
-  category: ProductCategory;
-  criteria: CriterionConfig[];
-}
-
-export interface RankedProduct {
-  productId: string;
-  qualification: QualificationStatus;
-  failures: string[];
-  unknowns: string[];
-  criterionScores: Record<string, number>;
-  weightedScore: number | null;
-  valueIndex: number | null;
-}
-```
-
-Parallel threads may not change these contracts. If a change is necessary, stop and return a proposed contract diff to the Reviewer.
-
-## 8. Deterministic scoring rules
-
-The canonical implementation is a pure local function under `lib/scoring`. Daytona executes the same versioned input and logic as a sponsor integration. If Daytona and local outputs differ, the local result is displayed with a mismatch warning.
-
-Rules:
-
-1. Evaluate mandatory requirements first.
-2. `fail` makes the product `disqualified`.
-3. `unknown` makes the product `needs_confirmation`.
-4. Rank only `qualified` products.
-5. A missing or invalid preferred value scores `0`.
-6. Normalise positive weights automatically. If all weights are zero, use category defaults.
-7. Clamp every criterion score to `0–10`.
-8. For higher-is-better:
+Oxylabs is not a product database, search engine, recommendation model, extraction model, complete browser-automation product, or universal-access mechanism. It cannot be assumed to access every website.
 
 ```text
-all equal -> 10
-otherwise -> 10 × (value - minimum) / (maximum - minimum)
+Candidate discovery selects products and source URLs.
+Oxylabs retrieves approved public URLs.
 ```
 
-9. For lower-is-better:
+Candidate discovery remains unresolved. Possible future inputs include controlled search providers, manufacturer catalogues, retailer catalogues, curated domain registries, user-provided URLs, and existing cached records. This handoff does not choose a discovery provider.
+
+### AI&
+
+AI& is the proposed primary layer for brief interpretation, decision-template proposals, ambiguity detection, follow-up questions, research-plan generation, structured claim extraction, source-level reconciliation, evidence-grounded comparative recommendations, trade-off explanations, and uncertainty communication.
+
+AI& outputs must be schema-validated, citation-bound, and constrained to the confirmed brief and validated evidence. The current structured-output compatibility problem remains an explicit blocker before AI& can be relied upon as the primary product reasoning layer.
+
+### Secondary providers
+
+- Doubleword is an optional extraction benchmark or fallback.
+- Daytona is an optional isolated-verification or development integration.
+- Nosana is an optional evidence-review experiment.
+
+Each secondary provider must remain behind an adapter or feature flag, be independently removable, stay outside the default critical path, and never block normal research.
+
+## 8. Dynamic Decision Architecture
+
+The target category model is:
 
 ```text
-all equal -> 10
-otherwise -> 10 × (maximum - value) / (maximum - minimum)
+reviewed common product ontology
++ curated templates where available
++ request-specific AI-generated criteria
++ explicit user confirmation
 ```
 
-10. Threshold preferred criterion: `10` when met, otherwise `0`.
-11. Weighted score is the sum of score × normalised weight.
-12. Value index, when price is a positive known number:
+AI& may propose criteria for a new category, but local code must normalize and validate criterion identifiers, labels, value types, units, operators, mandatory versus comparative importance, duplicates, and unsupported criteria. Curated templates remain useful for frequently requested categories without requiring separate hardcoded scoring modules.
+
+The conceptual AI stages are deliberately separate:
+
+1. brief interpretation;
+2. research-plan generation;
+3. claim extraction;
+4. evidence reconciliation;
+5. comparative synthesis;
+6. final output validation.
+
+The target recommendation is evidence-grounded rather than a fixed weighted `0–10` winner. Outputs should support best overall, best value, best for a named priority, viable alternatives, rejected candidates and reasons, key trade-offs, unresolved questions, evidence conflicts, and what could change the recommendation.
+
+Local deterministic code remains the trust and eligibility layer. It owns schema validation, hard constraints, eligibility, unit conversion, malformed-value handling, duplicate detection, source conflicts, unsupported citations, cache/freshness policy, safety policy, and target policy. AI& synthesis cannot override those checks.
+
+## 9. Research Depth and Budgeting
+
+The target should expose conceptual modes such as:
+
+- `quick`
+- `standard`
+- `detailed`
+- `extensive`
+- `custom`
+
+Each research job should carry budgets for maximum candidates, maximum finalists, maximum sources per finalist, maximum bytes or traffic, maximum elapsed time, maximum retries, and minimum evidence coverage. Any numeric examples introduced during implementation are initial planning defaults, not permanent product limits.
+
+Stopping conditions include required evidence coverage, remaining candidates failing hard constraints, materially repetitive additional sources, exhausted time or traffic budget, blocked target policy, and user cancellation.
+
+## 10. Evidence, Provenance, and Confidence
+
+Every source remains separate. The target evidence model records:
+
+- criterion key, value, and unit;
+- source identifier, URL, source type, and authority;
+- retrieval time and regional context;
+- excerpt reference and content hash;
+- claim status and conflict status;
+- freshness and policy metadata.
+
+Evidence-derived confidence is based on observable factors: important-criterion coverage, source authority, independent-source count, evidence recency, regional relevance, unresolved conflicts, and mandatory unknowns. AI& may explain the confidence assessment but is not the sole authority that invents it.
+
+## 11. Research Jobs and Persistence Requirements
+
+The current no-database, no-authentication architecture is insufficient for deep research. The target product is expected to require resumable research jobs, progress tracking, cancellation, bounded retries, evidence caching, content hashes, freshness timestamps, source refresh, traffic and cost accounting, saved research results, and failure recovery.
+
+The database vendor, queue vendor, orchestration technology, cloud platform, authentication provider, deployment provider, and observability platform are intentionally unresolved.
+
+## 12. Target Policy, Privacy, and Security
+
+The target must enforce:
+
+- public data only;
+- no credentials in client code or client-visible responses;
+- no login or paywall bypass;
+- no CAPTCHA-bypass claims;
+- per-domain rate limits and bounded concurrency;
+- bounded retries and explicit cancellation;
+- source allowlists and denylists;
+- restricted-target handling;
+- user-visible retrieval failures;
+- secret protection and staged-diff scanning;
+- short public evidence excerpts rather than committed full pages;
+- provider terms and target policies;
+- rejection or deferral of unsafe and regulated categories.
+
+## 13. Proposed Conceptual Contracts
+
+The following are proposed, illustrative contracts. They are not implemented, approved TypeScript schemas, or compatibility commitments.
+
+| Contract | Purpose | Key fields |
+|---|---|---|
+| `DecisionBrief` | User-confirmed purchasing intent | brief ID, product type, use case, region, currency, budget, constraints, priorities, assumptions, questions, research depth |
+| `DecisionTemplate` | Governed category decision model | template ID/version, ontology mapping, criteria, operators, units, source policy, confirmation requirements |
+| `DecisionCriterion` | One normalized decision dimension | identifier, label, value type, unit, operators, mandatory/comparative importance, support status, provenance |
+| `ResearchPolicy` | Research limits and safety policy | mode, candidate/finalist/source budgets, bytes, time, retries, coverage target, region, allowlists, denylists, freshness |
+| `ResearchJob` | Resumable orchestration state | job ID, brief/template/policy references, lifecycle status, progress, budget usage, timestamps, cancellation, failure state |
+| `CandidateProduct` | Discovered product identity | canonical ID, manufacturer, model, regional variant, candidate URLs, discovery provenance, duplicate links |
+| `SourceRecord` | One retrieved public source | source ID, URL, domain, source type, authority, region, retrieved time, hash, excerpt reference, policy result, traffic metadata |
+| `EvidenceClaim` | One source-bound product claim | product ID, criterion, value, unit, source ID, excerpt reference, retrieved time, region, claim status, conflict status |
+| `EvidencePack` | Reconciled evidence for a product | product ID, source records, claims, coverage, freshness, conflicts, unresolved questions |
+| `EligibilityResult` | Deterministic trust decision | product ID, pass/fail/unknown checks, hard-constraint reasons, missing evidence, policy violations, provenance |
+| `ComparativeRecommendation` | Evidence-grounded decision output | best overall/value/priority options, viable alternatives, rejected candidates, trade-offs, conflicts, unresolved questions, change triggers, citations, confidence factors |
+
+## 14. Migration Strategy
+
+Every stage below is proposed and unauthorized for implementation until the next architecture approval gate is passed:
+
+1. Freeze and document current baseline behaviour.
+2. Design and approve dynamic decision and evidence contracts.
+3. Introduce provider-independent research-job orchestration.
+4. Separate candidate discovery from retrieval.
+5. Build Oxylabs scheduling, target policy, caching, traffic accounting, and bounded concurrency.
+6. Implement dynamic but governed decision templates.
+7. Add claim-level evidence extraction and reconciliation.
+8. Introduce deterministic eligibility and citation validation.
+9. Add AI& comparative synthesis.
+10. Add detailed research progress and evidence interfaces.
+11. Add persistence, resumability, cancellation, and recovery.
+12. Place secondary providers behind optional adapters or feature flags.
+13. Migrate or retire the fixed weighted-recommendation interface.
+14. Evaluate quality before expanding broad category coverage.
+
+This is a staged migration from the current baseline, not authorization for a full rewrite.
+
+## 15. Evaluation Strategy
+
+Future evaluation must cover:
+
+- requirement-extraction accuracy;
+- candidate relevance;
+- duplicate detection;
+- regional-variant detection;
+- retrieval success;
+- claim-extraction accuracy;
+- unit normalization;
+- citation correctness;
+- conflict detection;
+- mandatory-constraint enforcement;
+- recommendation consistency;
+- unsupported-claim rate;
+- evidence freshness;
+- latency;
+- traffic consumption;
+- cost per completed job;
+- cancellation behaviour;
+- retry and recovery behaviour.
+
+Exact ranking tests alone will no longer be sufficient after fixed weighted scoring stops being the primary recommendation mechanism. The future system will need benchmark briefs and reviewed expected outcomes, but this handoff does not design the benchmark dataset.
+
+## 16. Secondary Providers
+
+Doubleword, Daytona, and Nosana remain optional integrations. They may provide extraction comparison, isolated verification, or evidence-review experiments, but they must not define the core product architecture, block normal research, or be required for the default product path. Their adapters and feature flags may be removed independently after the target architecture is approved.
+
+## 17. Risks and Unknowns
+
+The following decisions remain open:
+
+1. Candidate-discovery mechanism.
+2. Persistence technology.
+3. Job queue and orchestration technology.
+4. Authentication and ownership model.
+5. AI& structured-output compatibility.
+6. Claim-extraction architecture.
+7. Source-authority policy by claim type.
+8. Cache storage and retention.
+9. Research-depth defaults.
+10. Bandwidth and cost budgets.
+11. Region and currency handling.
+12. Supported and prohibited product categories.
+13. Source-policy enforcement.
+14. Dynamic-content retrieval strategy.
+15. Benchmark and evaluation dataset.
+16. Recommendation reproducibility requirements.
+17. Migration and backward-compatibility strategy.
+18. Deployment and observability platform.
+
+No vendor, provider, database, queue, authentication, cloud, discovery, or deployment choice is settled here.
+
+## 18. Current Blockers
+
+Before implementation of the target architecture, the following blockers need resolution:
+
+- AI& structured-output compatibility must be verified against the intended stage contracts.
+- Candidate discovery must be separated from retrieval and assigned an approved boundary.
+- Research-job persistence, queueing, cancellation, and recovery need approved lifecycle and infrastructure decisions.
+- Source authority, claim reconciliation, dynamic-content, regional, currency, and target-policy rules need explicit policy.
+- Oxylabs account quotas, targeting, restricted targets, and traffic economics must be verified from the owner’s current plan.
+- A benchmark and reviewed evaluation set must be defined before broad category expansion.
+
+## 19. Next Approval Gate
 
 ```text
-weighted score × 1000 / price
+Approve the target product architecture and conceptual contracts before implementation.
 ```
 
-13. Tie-break order:
-    - more complete evidence;
-    - lower known price;
-    - stable product ID.
+## 20. Exact Next Route
 
-Do not implement target-distance, confidence-adjusted scoring, financial forecasting, or sensitivity analysis during the hackathon.
-
-## 9. Frontend acceptance path
-
-Use one page with four visible stages:
-
-1. **Describe** — text input and three example prompts.
-2. **Confirm** — category, goal, requirements, assumptions, and editable weights.
-3. **Compare** — three product cards or a table, qualification status, scores, and provider status.
-4. **Recommend** — winner, reason, trade-offs, unknowns, evidence drawer, and next action.
-
-Required interactions:
-
-- submit one laptop prompt;
-- confirm or edit extracted requirements;
-- compare three products;
-- change at least one weight and recalculate;
-- open one evidence record;
-- switch to the prepared air-purifier and oven examples;
-- visibly identify live, cached, fallback, and synthetic data.
-
-Friendly copy is allowed around the workflow. Technical labels and errors remain plain.
-
-## 10. Branch and file ownership
-
-### Foundation
-
-Branch: `hackathon/foundation`
-
-Owns:
+The next pass should be an architecture specification pass, not direct feature implementation.
 
 ```text
-package.json
-package-lock.json
-tsconfig.json
-next.config.*
-eslint.config.*
-postcss.config.*
-app/layout.tsx
-app/page.tsx
-app/globals.css
-public/**
-vitest.config.*
-lib/contracts/**
-lib/config/**
-data/categories/**
-tests/contracts/**
-.env.example
-.gitignore
-README.md
-HANDOFF.md
+Model: GPT-5.6 Sol
+Reasoning: xHigh
+Mode: /plan
 ```
 
-Wave 0 must install all approved dependencies. Later workstreams do not edit package or lock files.
-
-### Frontend
-
-Branch: `hackathon/frontend`
-
-After the foundation commit is accepted, ownership of `app/page.tsx` transfers to this workstream.
-
-Allowlist:
-
-```text
-app/page.tsx
-components/**
-```
-
-### Domain and scoring
-
-Branch: `hackathon/domain`
-
-Allowlist:
-
-```text
-lib/domain/**
-lib/scoring/**
-data/products/**
-tests/scoring/**
-```
-
-### AI providers
-
-Branch: `hackathon/ai-providers`
-
-Allowlist:
-
-```text
-lib/providers/aiand.ts
-lib/providers/doubleword.ts
-app/api/requirements/**
-app/api/extract/**
-data/provider-fixtures/aiand/**
-data/provider-fixtures/doubleword/**
-tests/providers/ai/**
-```
-
-### Oxylabs retrieval
-
-Branch: `hackathon/oxylabs`
-
-Allowlist:
-
-```text
-lib/providers/oxylabs.ts
-lib/retrieval/**
-app/api/retrieve/**
-data/provider-fixtures/oxylabs/**
-tests/providers/oxylabs/**
-```
-
-### Daytona and Nosana
-
-Branch: `hackathon/infrastructure`
-
-Allowlist:
-
-```text
-lib/providers/daytona.ts
-lib/providers/nosana.ts
-app/api/score/**
-app/api/review-evidence/**
-data/provider-fixtures/daytona/**
-data/provider-fixtures/nosana/**
-tests/providers/infrastructure/**
-```
-
-### Integration
-
-Branch: `hackathon/integration`
-
-The integration owner merges or cherry-picks accepted branches from the same foundation commit. Only the integration owner may change files outside a workstream allowlist after parallel work starts.
-
-Merge order:
-
-1. domain;
-2. AI providers;
-3. Oxylabs;
-4. Daytona/Nosana;
-5. frontend;
-6. integration fixes.
-
-No concurrent workstream edits `main`.
-
-## 11. Security requirements
-
-- Keep credentials in `.env.local` or the deployment secret store.
-- `.gitignore` must ignore `.env*` and explicitly allow `.env.example`.
-- Provider modules must be server-only.
-- Do not send provider credentials to client components.
-- Validate every provider response before use.
-- Cache only short public excerpts and metadata, not full scraped pages.
-- Do not commit account details, private logs, screenshots with credentials, or workplace-confidential information.
-- Review the staged diff for secret-like values before every push.
-- If an available secret scanner is already installed, run it. Do not spend hackathon time installing a complex scanner.
-- Stop immediately if a secret is staged or browser exposure is required.
-
-## 12. Reviewer–Implementer workflow
-
-ChatGPT:
-
-- defines the next bounded outcome;
-- selects model, reasoning, and `/plan` usage;
-- protects shared contracts and file ownership;
-- reviews supplied evidence;
-- labels findings as demonstrated, reported, inferred, or unknown;
-- accepts, corrects, stops, or routes the next pass.
-
-Codex:
-
-- inspects and edits the authorised repository scope;
-- runs applicable checks;
-- commits and pushes only when authorised;
-- stops on contract, ownership, security, or scope conflicts;
-- does not begin another pass automatically.
-
-Model-routing default:
-
-- unresolved architecture or contracts: Sol high with `/plan`;
-- normal bounded implementation: Luna high, direct;
-- difficult integration or deterministic debugging: Luna xHigh, direct;
-- Max or Ultra: not used during the hackathon without explicit owner approval.
-
-If the requested model or reasoning control is unavailable in the active Codex interface, report that limitation and use the lowest available safe equivalent approved by the Reviewer.
-
-## 13. Evidence proportional to the pass
-
-### Lightweight workstream report
-
-Return:
-
-- branch and base SHA;
-- files changed;
-- concise result;
-- commands run;
-- test/typecheck result relevant to the pass;
-- blockers;
-- commit SHA and push result, if authorised.
-
-### Full integration report
-
-Additionally return:
-
-- complete changed-file list;
-- `npm test`, `npm run lint`, and `npm run build` results;
-- one end-to-end smoke result;
-- live/fallback status for all five providers;
-- secret-review result;
-- final branch divergence and Git status;
-- known demo limitations.
-
-Never claim a check ran when it did not.
-
-## 14. Stop conditions
-
-Stop and report when:
-
-- shared contracts need to change;
-- a required dependency was not approved in Wave 0;
-- another thread owns the required file;
-- provider credentials or endpoints are unavailable;
-- a live call cannot be made without exposing secrets;
-- repository state differs from the expected base;
-- unrelated changes exist;
-- a force push, reset, rebase, or history rewrite would be required;
-- scope exceeds the defined MVP;
-- tests expose an architectural decision rather than a local defect;
-- the remaining time is below the final freeze threshold.
-
-## 15. 3.5-hour execution and freeze
-
-Assuming provider preflight and fixtures are allowed before the timer:
-
-- 0:00–0:15 — approve Wave 0 plan and fixed decisions
-- 0:15–0:35 — implement and accept foundation
-- 0:35–1:35 — parallel workstreams
-- 1:35–2:15 — merge and integrate
-- 2:15–2:45 — provider verification and fallbacks
-- 2:45–3:10 — UI hardening and demo script
-- 3:10–3:30 — final freeze, restart, smoke test, and rehearsal
-
-At 3:10, stop feature work. Only fixes that block the prepared demo path are allowed.
-
-## 16. Cut order
-
-When time slips, cut in this order:
-
-1. live Nosana call; use a cached validated result;
-2. live Doubleword call; use cached extraction;
-3. Oxylabs retrieval for more than one page;
-4. multiple user-story variants;
-5. advanced editing of requirements;
-6. detailed calculation trace UI;
-7. live research for air purifier and oven;
-8. nonessential animation and humour;
-9. Daytona live execution; use local scoring and show fallback status.
-
-Do not cut:
-
-- working frontend;
-- three selectable categories;
-- three prepared products per category;
-- mandatory pass/fail/unknown handling;
-- deterministic scoring;
-- editable weights;
-- recommendation;
-- evidence and origin labels;
-- secret protection.
-
-## 17. Immediate post-hackathon roadmap
-
-1. Stabilise schemas, tests, accessibility, and setup.
-2. Improve evidence provenance, conflict handling, and unit normalisation.
-3. Formalise a category-plugin framework.
-4. Add saved projects and persistence only after architecture approval.
-5. Expand live discovery and source coverage.
-6. Add advanced decision support, exports, and collaboration.
-7. Address enterprise security and privacy before confidential-data workflows.
+That pass should settle dynamic decision contracts, the research-job lifecycle, the candidate-discovery boundary, the Oxylabs retrieval scheduler, evidence and provenance, AI& stage contracts, persistence and queue boundaries, deterministic trust and eligibility validation, migration compatibility, and the evaluation plan.

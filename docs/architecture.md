@@ -1,9 +1,9 @@
 # cookedUserStory — Target Product Architecture Specification
 
-> **Status: Proposed target architecture — pending owner approval**  
+> **Status: Owner-approved target architecture — implementation not authorized**
 > **Architecture specification — not yet implemented**
 
-This document is the detailed target architecture for the post-hackathon product. It records recommended boundaries and contracts for review; it does not authorize implementation, select infrastructure vendors, or make the proposal owner-approved.
+This document is the detailed target architecture for the post-hackathon product. The product owner approved this specification after commit 54a73f51f8753530d15dc7f37c04c0c309e4c1ff (docs: define target product architecture). The approval records direction only: it does not authorize implementation, select infrastructure vendors, approve any ADR, or authorize a migration wave.
 
 ## 1. Status and scope
 
@@ -199,7 +199,13 @@ Every wave below is proposed and unauthorized until the owner approves this spec
 
 ## 28. ADR sequence and approval gates
 
-No ADR files are created by this pass, and no ADR is approved merely because this specification was drafted. The proposed sequence is:
+The first three ADR drafts are linked below. Each remains Proposed — pending owner approval; no ADR is approved merely because this specification was approved:
+
+1. [ADR-001 — Dynamic Decision Templates and Contract Versioning](adr/ADR-001-dynamic-decision-templates-and-contract-versioning.md)
+2. [ADR-002 — Evidence, Provenance, and Claim-Type Authority](adr/ADR-002-evidence-provenance-and-claim-type-authority.md)
+3. [ADR-003 — Research-Job State Machine and Idempotency](adr/ADR-003-research-job-state-machine-and-idempotency.md)
+
+The complete proposed sequence is:
 
 1. Dynamic decision templates and contract versioning.
 2. Evidence, provenance, and claim-type authority.
@@ -213,22 +219,23 @@ No ADR files are created by this pass, and no ADR is approved merely because thi
 10. Recommendation and confidence model.
 11. Migration and deprecation strategy.
 
-ADR-001 through ADR-003 must be drafted and approved first because later storage, API, provider, orchestration, and migration decisions depend on their contracts. Their status remains proposed until the owner approves them through a later documentation-only pass.
+ADR-001 through ADR-003 must be reviewed and approved first because later storage, API, provider, orchestration, and migration decisions depend on their contracts. Their status remains proposed until the owner approves them through a later documentation-only pass. This documentation pass creates drafts only.
 
 ## 29. Approved decisions, unresolved choices, and acceptance criteria
 
-Owner-approved product decisions are recorded in `HANDOFF.md`; this document adds no new owner approvals. The following remain unresolved: candidate-discovery mechanism; persistence technology; job queue/orchestration technology; authentication/ownership; AI& structured-output compatibility; claim-extraction architecture; source authority by claim type; cache storage/retention; research-depth defaults; bandwidth/cost budgets; region/currency handling; supported/prohibited categories; source-policy enforcement; dynamic-content strategy; benchmark/evaluation dataset; recommendation reproducibility; migration/backward compatibility; deployment/observability platform.
+The owner-approved product direction and this specification are now approved as architectural direction, but the target remains unimplemented. The following remain unresolved: candidate-discovery mechanism; persistence technology; job queue/orchestration technology; authentication/ownership; AI& structured-output compatibility; claim-extraction architecture; source authority by claim type; cache storage/retention; research-depth defaults; bandwidth/cost budgets; region/currency handling; supported/prohibited categories; source-policy enforcement; dynamic-content strategy; benchmark/evaluation dataset; recommendation reproducibility; migration/backward compatibility; deployment/observability platform.
 
 The architecture specification is acceptable for review when it preserves the current baseline boundary, keeps discovery separate from retrieval, defines versioned provider-independent contracts, makes trust/eligibility deterministic, bounds retrieval and retries, makes evidence and freshness visible, keeps secondary providers optional, and leaves unresolved vendor/owner choices explicit. Acceptance of this document does not authorize implementation.
 
-## 30. Next implementation gate
+## 30. Next approval gate
 
 ```text
-Review and approve the target architecture specification.
-After approval, authorize a documentation-only pass to draft ADR-001 through ADR-003.
+Review and approve ADR-001 through ADR-003.
+After all three ADRs are approved, the owner may separately authorize only
+Migration Wave 1: versioned target contracts and a legacy compatibility layer.
 ```
 
-The next route is a documentation-only ADR drafting pass after owner approval:
+The next route is owner review of the three ADR drafts. No migration wave, application implementation, provider rollout, or infrastructure selection is authorized. If the ADRs are approved, the owner must make a separate authorization decision for Migration Wave 1:
 
 ```text
 Model: GPT-5.6 Sol
@@ -236,4 +243,4 @@ Reasoning: xHigh
 Mode: /plan
 ```
 
-No migration wave, application implementation, provider rollout, or infrastructure selection is authorized by this specification.
+The ADR drafts are documentation only. They do not freeze production schemas, approve vendors, or begin implementation.

@@ -4,7 +4,7 @@
 
 The hackathon has ended. `cookedUserStory` is now being developed as a real product and portfolio-quality engineering project.
 
-This document records the current implemented baseline, owner-approved product direction, proposed target architecture, evidence classification, open decisions, and the next approval gate. The detailed target specification is drafted in [`docs/architecture.md`](docs/architecture.md), remains pending owner approval, and is not implemented; the conceptual contracts below are not frozen TypeScript contracts.
+This document records the current implemented baseline, owner-approved product direction, owner-approved target architecture, proposed ADRs, evidence classification, open decisions, and the next approval gate. The detailed target specification is recorded in [`docs/architecture.md`](docs/architecture.md) as owner-approved direction but remains unimplemented; the conceptual contracts below are not frozen TypeScript contracts.
 
 The repository is public. Public-repository security, provenance, and responsible-retrieval requirements apply to every future change. This document is a planning and governance handoff, not proof of runtime provider access or production readiness.
 
@@ -47,7 +47,7 @@ The owner approved the post-hackathon product direction below and reports access
 
 ### Proposed architecture
 
-Dynamic governed categories, progressive research, research jobs, evidence reconciliation, AI& comparative synthesis, persistence, and the conceptual contracts in [`docs/architecture.md`](docs/architecture.md) are proposed and not implemented. No migration wave is authorized by the drafted specification.
+Dynamic governed categories, progressive research, research jobs, evidence reconciliation, AI& comparative synthesis, persistence, and the conceptual contracts in [`docs/architecture.md`](docs/architecture.md) are owner-approved target direction but not implemented. ADR-001 through ADR-003 are drafted and remain Proposed — pending owner approval. No migration wave is authorized.
 
 ### Unknown
 
@@ -312,13 +312,14 @@ Before implementation of the target architecture, the following blockers need re
 ## 19. Next Approval Gate
 
 ```text
-Review and approve the target architecture specification.
-After approval, authorize a documentation-only pass to draft ADR-001 through ADR-003.
+Review and approve ADR-001 through ADR-003.
+After all three ADRs are approved, the owner may separately authorize only
+Migration Wave 1: versioned target contracts and a legacy compatibility layer.
 ```
 
 ## 20. Exact Next Route
 
-The target architecture specification has been drafted in [`docs/architecture.md`](docs/architecture.md), but remains pending owner approval. Implementation has not begun and no migration wave is authorized. The next planned pass is a documentation-only ADR drafting pass after the owner approves the specification.
+The target architecture specification has been drafted and owner-approved as direction in [`docs/architecture.md`](docs/architecture.md), but remains unimplemented. ADR-001 through ADR-003 have now been drafted and remain Proposed — pending owner approval. Application implementation has not begun and no migration wave is authorized. The next planned pass is owner review of the three ADRs.
 
 ```text
 Model: GPT-5.6 Sol
@@ -326,4 +327,4 @@ Reasoning: xHigh
 Mode: /plan
 ```
 
-That pass should draft ADR-001 through ADR-003 for dynamic decision templates and contract versioning, evidence/provenance and claim-type authority, and the research-job state machine and idempotency. It must not begin implementation or Migration Wave 1.
+The owner must make two separate decisions: first approve ADR-001 through ADR-003; then separately decide whether to authorize only Migration Wave 1. Approval of the ADRs alone does not authorize Migration Wave 1.

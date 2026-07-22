@@ -45,13 +45,15 @@ Audit metadata may retain status, duration, HTTP classification, byte counts, ca
 
 An EvidenceClaim includes product identity, regional variant, canonical criterion key, raw value, raw unit, normalized value, canonical unit, source ID, excerpt reference, extraction origin, extractor version, retrieved time, applicable region, and status metadata.
 
-Statuses are separated to avoid one ambiguous enum:
+Statuses are independent dimensions; no single combined claim-status enum may replace them:
 
-- extraction/support status: reported, normalized, supported, unsupported, missing, needs_review;
-- freshness status: current, stale, unknown;
-- reconciliation status: uncontested, confirmed, conflicting, resolved.
+- extractionStatus: not_attempted, extracted, extraction_failed, needs_review;
+- normalizationStatus: raw_only, normalized, normalization_failed, not_applicable;
+- supportStatus: supported, unsupported, missing, ambiguous;
+- freshnessStatus: current, stale, unknown;
+- reconciliationStatus: uncontested, confirmed, conflicting, resolved.
 
-An implementation may refine names, but must preserve the separate dimensions and their meanings. A claim never becomes authoritative merely because extraction succeeded.
+The exact enum names remain illustrative, but the five dimensions and their independence are binding. Extraction success does not imply evidentiary support. Normalization success does not imply correctness or authority. Missing evidence is distinct from failed extraction. Freshness is independent of support and reconciliation. A supported claim may still conflict with another supported claim; resolving that conflict retains every competing claim, the resolution provenance, and the rule used. A claim never becomes authoritative merely because extraction or normalization succeeded.
 
 ### Claim-type authority
 
@@ -127,7 +129,10 @@ A later migration can wrap existing fixture/provider artifacts as SourceRecord a
 
 - Every recommendation assertion has a valid source-bound citation.
 - Provenance reaches the source, retrieval, provider execution, stage, and job.
-- Extraction, freshness, support, and reconciliation statuses remain distinct.
+- Extraction, normalization, support, freshness, and reconciliation statuses are independent dimensions; no combined claim-status enum replaces them.
+- Extraction success does not imply support, and normalization success does not imply correctness or authority.
+- Missing evidence is distinct from failed extraction, and freshness is independent of support and reconciliation.
+- Supported claims may conflict; a resolved conflict retains all competing claims and resolution provenance.
 - Conflicts are retained and material resolutions are explained.
 - Source authority is claim-type-specific and independence-aware.
 - Evidence packs are immutable and refreshable without overwriting history.

@@ -180,7 +180,7 @@ Future evaluation covers requirement-extraction accuracy, candidate relevance, d
 
 ## 27. Migration waves
 
-Every wave below is proposed and unauthorized until the owner approves this specification and the required ADRs:
+Every wave below remains proposed and unauthorized until the owner separately authorizes it; approval of this specification and ADRs alone is insufficient:
 
 1. Freeze and document current baseline behaviour.
 2. Design and approve dynamic decision and evidence contracts.
@@ -199,7 +199,7 @@ Every wave below is proposed and unauthorized until the owner approves this spec
 
 ## 28. ADR sequence and approval gates
 
-The first three ADR drafts are linked below. Each remains Proposed — pending owner approval; no ADR is approved merely because this specification was approved:
+The first three ADRs are linked below. Each is accepted and owner-approved, remains unimplemented, and does not authorize a migration wave:
 
 1. [ADR-001 — Dynamic Decision Templates and Contract Versioning](adr/ADR-001-dynamic-decision-templates-and-contract-versioning.md)
 2. [ADR-002 — Evidence, Provenance, and Claim-Type Authority](adr/ADR-002-evidence-provenance-and-claim-type-authority.md)
@@ -219,7 +219,7 @@ The complete proposed sequence is:
 10. Recommendation and confidence model.
 11. Migration and deprecation strategy.
 
-ADR-001 through ADR-003 must be reviewed and approved first because later storage, API, provider, orchestration, and migration decisions depend on their contracts. Their status remains proposed until the owner approves them through a later documentation-only pass. This documentation pass creates drafts only.
+ADR-001 through ADR-003 are accepted and owner-approved. They remain unimplemented and do not freeze production schemas, select vendors, or authorize Migration Wave 1. Their approval is recorded here for review; implementation requires a separate owner authorization.
 
 ## 29. Approved decisions, unresolved choices, and acceptance criteria
 
@@ -230,12 +230,12 @@ The architecture specification is acceptable for review when it preserves the cu
 ## 30. Next approval gate
 
 ```text
-Review and approve ADR-001 through ADR-003.
-After all three ADRs are approved, the owner may separately authorize only
+Review the recorded approval status of ADR-001 through ADR-003.
+After that review, the owner may separately decide whether to authorize only
 Migration Wave 1: versioned target contracts and a legacy compatibility layer.
 ```
 
-The next route is owner review of the three ADR drafts. No migration wave, application implementation, provider rollout, or infrastructure selection is authorized. If the ADRs are approved, the owner must make a separate authorization decision for Migration Wave 1:
+The next route is review of the recorded approval status of the three ADRs. No migration wave, application implementation, provider rollout, or infrastructure selection is authorized. The owner must make a separate authorization decision for Migration Wave 1:
 
 ```text
 Model: GPT-5.6 Sol

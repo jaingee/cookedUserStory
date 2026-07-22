@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed — pending owner approval
+Accepted — owner-approved; not yet implemented
 
 ## Context
 
@@ -148,6 +148,8 @@ Persistence schema, queue/worker technology, event transport, outbox implementat
 
 ## Approval Gate
 
-Owner approval is required before implementation. Approval of this ADR is separate from authorization of Migration Wave 1.
+This ADR is accepted and owner-approved.
+
+It remains unimplemented. Approval of this ADR does not authorize Migration Wave 1 or any application change. Migration Wave 1 requires a separate owner authorization after the approved ADR status has been recorded and reviewed.
 
 See [ADR-001](ADR-001-dynamic-decision-templates-and-contract-versioning.md) for versioned confirmed inputs and hashes, and [ADR-002](ADR-002-evidence-provenance-and-claim-type-authority.md) for the evidence records and immutable packs produced by stages.

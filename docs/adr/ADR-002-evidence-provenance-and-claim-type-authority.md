@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed — pending owner approval
+Accepted — owner-approved; not yet implemented
 
 ## Context
 
@@ -145,6 +145,8 @@ Exact evidence schemas, excerpt storage, retention, source-authority policy tabl
 
 ## Approval Gate
 
-Owner approval is required before implementation. Approval of this ADR is separate from Migration Wave 1 authorization.
+This ADR is accepted and owner-approved.
+
+It remains unimplemented. Approval of this ADR does not authorize Migration Wave 1 or any application change. Migration Wave 1 requires a separate owner authorization after the approved ADR status has been recorded and reviewed.
 
 See [ADR-001](ADR-001-dynamic-decision-templates-and-contract-versioning.md) for canonical criterion identity and [ADR-003](ADR-003-research-job-state-machine-and-idempotency.md) for idempotent production and refresh of evidence packs.

@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed — pending owner approval
+Accepted — owner-approved; not yet implemented
 
 ## Context
 
@@ -119,6 +119,8 @@ The ontology registry, storage format, schema library layout, migration tooling,
 
 ## Approval Gate
 
-Owner approval is required before implementation. Approval of this ADR must be separate from authorization of Migration Wave 1.
+This ADR is accepted and owner-approved.
+
+It remains unimplemented. Approval of this ADR does not authorize Migration Wave 1 or any application change. Migration Wave 1 requires a separate owner authorization after the approved ADR status has been recorded and reviewed.
 
 See [ADR-002](ADR-002-evidence-provenance-and-claim-type-authority.md) for canonical criterion references in evidence claims and [ADR-003](ADR-003-research-job-state-machine-and-idempotency.md) for versioned snapshot inputs and stage hashes.

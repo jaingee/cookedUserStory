@@ -99,15 +99,36 @@ Impact: <concrete failure or risk>
 Correction: <smallest adequate remedy>
 Evidence: <diff, implementation, test, task, instruction, or specification fact>
 
+A material finding requires evidence establishing a defect in the reviewed
+change, delivery, committed artifact, or explicitly required acceptance
+deliverable. Examples include incorrect implementation, a current failing test
+attributable to the change, unauthorized code or delivery, a security/privacy or
+architecture-invariant violation, a committed factual documentation error, or a
+demonstrably absent required acceptance artifact. Such findings may require
+`CORRECTION_REQUIRED`.
+
+An evidence gap means proof needed to determine correctness is unavailable, stale,
+tied to another immutable object, or otherwise insufficient. Examples include a
+missing current-head result, prior-SHA evidence, unavailable required live-provider
+validation or environment, and a missing selector or immutable evidence boundary.
+An evidence gap by itself is not a material defect in the reviewed change. Record
+it under `Evidence gaps`; when it is required for approval, return `INCONCLUSIVE`.
+
+Unsupported Implementer, PR, or handoff prose is normally `Reported`, not a
+material finding merely because current proof is unavailable. It may become a
+material finding when the misleading claim is itself a committed or explicitly
+required deliverable, or independent evidence establishes that it is false rather
+than merely unverified.
+
 Severity:
 
 - Critical: credible secret exposure, severe security/privacy breach,
   irreversible data loss, or fundamentally unsafe behavior.
 - High: likely correctness/acceptance failure, unauthorized scope, or a major
   invariant or architecture violation.
-- Medium: a bounded but material defect, evidence gap, test weakness,
-  maintainability regression, or factual documentation error that requires
-  correction.
+- Medium: a bounded but established implementation or delivery defect, test
+  weakness, maintainability regression, or committed factual documentation error
+  that requires correction.
 
 Omit cosmetic preferences and speculative nits.
 
@@ -163,11 +184,17 @@ anyone to create a commit.
 
 ## Decision precedence
 
-1. `CORRECTION_REQUIRED` when at least one material defect is established.
-2. Otherwise, `INCONCLUSIVE` when a required input, immutable boundary,
-   selector-stability check, or risk-tier evidence minimum is missing.
+1. `CORRECTION_REQUIRED` when at least one material defect in the reviewed change
+   or delivery is established.
+2. Otherwise, `INCONCLUSIVE` when evidence required to determine approval is
+   missing, stale, tied to another immutable object, unavailable, or otherwise
+   insufficient.
 3. `APPROVE` only when there are no material findings, the evidence minimum is
    met, and every remaining unknown is explicitly non-material.
+
+Do not manufacture a material finding solely to avoid returning `INCONCLUSIVE`.
+Do not downgrade an established defect to an evidence gap merely because more
+evidence could also be collected.
 
 A reported correction never converts the prior decision automatically. Review the
 new immutable object.
